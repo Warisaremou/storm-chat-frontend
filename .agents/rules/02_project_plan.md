@@ -5,45 +5,50 @@
 > These are the ONLY features to implement. Do not add anything else.
 
 ### Auth Features
-| # | Feature | Description |
-|---|---------|-------------|
-| A1 | Register — Step 1 | Email, username, password form |
-| A2 | Register — Step 2 (Account Setup) | Display name, optional avatar upload |
-| A3 | Login | Email OR username + password |
-| A4 | Forgot Password | Enter email to receive reset link |
-| A5 | Reset Password | New password form (via token in URL) |
+
+| #   | Feature                           | Description                          |
+| --- | --------------------------------- | ------------------------------------ |
+| A1  | Register — Step 1                 | Email, username, password form       |
+| A2  | Register — Step 2 (Account Setup) | Display name, optional avatar upload |
+| A3  | Login                             | Email OR username + password         |
+| A4  | Forgot Password                   | Enter email to receive reset link    |
+| A5  | Reset Password                    | New password form (via token in URL) |
 
 ### User Features
-| # | Feature | Description |
-|---|---------|-------------|
-| U1 | View own profile | Profile settings page |
-| U2 | Update profile | Edit display name, status, bio |
-| U3 | Upload/change avatar | With preview and crop option |
-| U4 | Search users | Search by username |
-| U5 | Send invitation | Send a chat invitation to another user |
+
+| #   | Feature              | Description                            |
+| --- | -------------------- | -------------------------------------- |
+| U1  | View own profile     | Profile settings page                  |
+| U2  | Update profile       | Edit display name, status, bio         |
+| U3  | Upload/change avatar | With preview and crop option           |
+| U4  | Search users         | Search by username                     |
+| U5  | Send invitation      | Send a chat invitation to another user |
 
 ### Invitation Features
-| # | Feature | Description |
-|---|---------|-------------|
-| I1 | View received invitations | List of pending invitations |
-| I2 | Accept invitation | Creates a new conversation |
-| I3 | Decline invitation | Removes invitation |
+
+| #   | Feature                   | Description                 |
+| --- | ------------------------- | --------------------------- |
+| I1  | View received invitations | List of pending invitations |
+| I2  | Accept invitation         | Creates a new conversation  |
+| I3  | Decline invitation        | Removes invitation          |
 
 ### Chat Features
-| # | Feature | Description |
-|---|---------|-------------|
-| C1 | Conversation list | Sidebar list of conversations |
-| C2 | Open conversation | View message thread |
-| C3 | Send message | Text message input + send |
-| C4 | View message history | Scrollable chat history |
-| C5 | View contact profile | Modal with contact's public profile |
-| C6 | Online status display | Show online/offline/away/busy |
+
+| #   | Feature               | Description                         |
+| --- | --------------------- | ----------------------------------- |
+| C1  | Conversation list     | Sidebar list of conversations       |
+| C2  | Open conversation     | View message thread                 |
+| C3  | Send message          | Text message input + send           |
+| C4  | View message history  | Scrollable chat history             |
+| C5  | View contact profile  | Modal with contact's public profile |
+| C6  | Online status display | Show online/offline/away/busy       |
 
 ---
 
 ## 2. Pages & Routes
 
 ### Public Routes (no auth required)
+
 ```
 /login                    → LoginPage
 /register                 → RegisterStep1Page
@@ -53,6 +58,7 @@
 ```
 
 ### Protected Routes (auth required)
+
 ```
 /chat                     → ChatPage (redirect to first conversation or empty state)
 /chat/:conversationId     → ChatPage (with active conversation)
@@ -61,6 +67,7 @@
 ```
 
 ### Root redirect
+
 ```
 /                         → redirect to /chat if authed, else /login
 ```
@@ -70,6 +77,7 @@
 ## 3. Page Breakdown
 
 ### `LoginPage`
+
 - Logo + tagline
 - Form: identifier (email or username), password
 - Forgot password link
@@ -78,12 +86,14 @@
 - Error display (invalid credentials)
 
 ### `RegisterStep1Page`
+
 - Progress indicator (Step 1 of 2)
 - Form: email, username, password, confirm password
 - Real-time validation
 - Login link
 
 ### `RegisterStep2Page`
+
 - Progress indicator (Step 2 of 2)
 - Form: display_name (required), avatar upload (optional)
 - Avatar preview
@@ -91,26 +101,32 @@
 - Finish button
 
 ### `ForgotPasswordPage`
+
 - Form: email input
 - Success state: confirmation message
 - Back to login link
 
 ### `ResetPasswordPage`
+
 - Form: new password + confirm password
 - Token validation (show error if token invalid/expired)
 - Success state: redirect to login
 
 ### `ChatPage`
+
 **Layout: 3-column**
+
 - **Column 1 (Sidebar):** App branding, nav links, conversation list, user avatar + status at bottom
 - **Column 2 (Conversation list):** Search bar, list of direct message conversations
 - **Column 3 (Chat area):** Active conversation header, message list, message input
 
 **Empty state (no conversation selected):**
+
 - Centered illustration + "Select a conversation to start chatting"
 - "Find people" CTA button
 
 ### `InvitationsPage`
+
 - Tabs: "Received" | "Sent"
 - Each invitation card: avatar, username, display name, sent time
 - Accept / Decline actions (received tab)
@@ -118,6 +134,7 @@
 - Empty states for each tab
 
 ### `ProfileSettingsPage`
+
 - Current avatar display with change button
 - Form: display_name, status selector (online/away/busy)
 - Save button with loading state
@@ -128,6 +145,7 @@
 ## 4. Component Architecture
 
 ### Layout Components
+
 ```
 src/components/layout/
 ├── AppLayout.tsx          # Root layout for authenticated pages
@@ -137,6 +155,7 @@ src/components/layout/
 ```
 
 ### UI Components (shadcn-based & custom)
+
 ```
 src/components/ui/
 ├── [all shadcn components]
@@ -153,6 +172,7 @@ src/components/ui/
 ```
 
 ### Feature Components
+
 ```
 src/features/
 ├── auth/
@@ -209,10 +229,11 @@ src/features/
 ## 5. Global State (Zustand Stores)
 
 ### `authStore`
+
 ```typescript
 interface AuthState {
-  user: AuthUser | null;         // From users table
-  profile: UserProfile | null;   // From profiles table
+  user: AuthUser | null; // From users table
+  profile: UserProfile | null; // From profiles table
   isAuthenticated: boolean;
   isLoading: boolean;
   // Actions
@@ -223,6 +244,7 @@ interface AuthState {
 ```
 
 ### `uiStore`
+
 ```typescript
 interface UIState {
   sidebarOpen: boolean;
@@ -238,11 +260,12 @@ interface UIState {
 ```
 
 ### `chatStore`
+
 ```typescript
 interface ChatState {
   activeConversationId: number | null;
   conversations: Conversation[];
-  messages: Record<number, Message[]>;  // conversationId → messages
+  messages: Record<number, Message[]>; // conversationId → messages
   // Actions
   setActiveConversation: (id: number) => void;
   addMessage: (conversationId: number, message: Message) => void;
@@ -254,6 +277,7 @@ interface ChatState {
 ## 6. Implementation Phases
 
 ### Phase 1 — Project Setup
+
 - [ ] Init Vite + React + TypeScript
 - [ ] Configure Tailwind CSS v4
 - [ ] Install and configure shadcn/ui
@@ -267,6 +291,7 @@ interface ChatState {
 - [ ] Create `globals.css` with design tokens
 
 ### Phase 2 — Auth Pages
+
 - [ ] AuthLayout component
 - [ ] LoginPage
 - [ ] RegisterStep1Page
@@ -278,6 +303,7 @@ interface ChatState {
 - [ ] authStore implementation
 
 ### Phase 3 — App Shell
+
 - [ ] AppLayout (sidebar + main)
 - [ ] Sidebar component (nav links, user info)
 - [ ] ChatLayout (3-column)
@@ -286,6 +312,7 @@ interface ChatState {
 - [ ] uiStore implementation
 
 ### Phase 4 — Chat Feature
+
 - [ ] ConversationList component
 - [ ] ChatPage (empty state)
 - [ ] MessageList component
@@ -296,6 +323,7 @@ interface ChatState {
 - [ ] chatStore implementation
 
 ### Phase 5 — Invitations Feature
+
 - [ ] InvitationsPage
 - [ ] ReceivedInvitations component
 - [ ] SentInvitations component
@@ -304,12 +332,14 @@ interface ChatState {
 - [ ] Mock invitations data
 
 ### Phase 6 — Profile Settings
+
 - [ ] ProfileSettingsPage
 - [ ] AvatarUpload component (with local preview)
 - [ ] ProfileForm component
 - [ ] StatusSelector component
 
 ### Phase 7 — Polish & QA
+
 - [ ] All loading states
 - [ ] All error states
 - [ ] All empty states
@@ -323,6 +353,7 @@ interface ChatState {
 ## 7. Key UX Flows
 
 ### Registration Flow
+
 ```
 /register → fill email/username/password → submit
   → redirect to /register/setup
@@ -331,6 +362,7 @@ interface ChatState {
 ```
 
 ### Login Flow
+
 ```
 /login → fill identifier + password → submit
   → success → redirect to /chat
@@ -338,6 +370,7 @@ interface ChatState {
 ```
 
 ### Sending an Invitation
+
 ```
 Chat page → click "Find people" (or search icon)
   → search modal opens → type username
@@ -346,6 +379,7 @@ Chat page → click "Find people" (or search icon)
 ```
 
 ### Accepting an Invitation
+
 ```
 /invitations → Received tab
   → click "Accept" on invitation card
@@ -354,6 +388,7 @@ Chat page → click "Find people" (or search icon)
 ```
 
 ### Opening a Profile
+
 ```
 Chat area → click on contact avatar/name in header
   → UserProfileModal opens (slide in from right)

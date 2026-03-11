@@ -40,7 +40,7 @@ export interface AuthUser {
   id: number;
   email: string;
   username: string;
-  created_at: string;    // ISO 8601 datetime
+  created_at: string; // ISO 8601 datetime
   updated_at: string;
   // password is NEVER returned by the API
 }
@@ -88,12 +88,12 @@ export interface RegisterStep1Payload {
 // --- Register Step 2 (Account Setup) ---
 export interface RegisterStep2Payload {
   display_name: string;
-  avatar?: File;    // Optional — multipart/form-data if present
+  avatar?: File; // Optional — multipart/form-data if present
 }
 
 // --- Login ---
 export interface LoginPayload {
-  identifier: string;   // Can be email OR username (backend resolves)
+  identifier: string; // Can be email OR username (backend resolves)
   password: string;
 }
 
@@ -118,7 +118,7 @@ export interface ResetPasswordPayload {
 export interface UpdateProfilePayload {
   display_name?: string;
   status?: UserStatus;
-  avatar?: File;        // Optional — multipart/form-data if present
+  avatar?: File; // Optional — multipart/form-data if present
 }
 ```
 
@@ -127,7 +127,7 @@ export interface UpdateProfilePayload {
 ## 4. Room Types
 
 > Derived from `rooms_db`: `rooms`, `room_members` tables
-> 
+>
 > ⚠️ NOTE: For the current feature scope (1-to-1 DM only), rooms are used as conversation containers.
 > A "conversation" in the UI maps to a `Room` with `type: 'private'`.
 
@@ -161,7 +161,7 @@ export interface RoomMember {
 // Frontend "Conversation" view
 // A private room between two users, enriched with the other participant's info
 export interface Conversation {
-  id: number;                    // = Room.id
+  id: number; // = Room.id
   room: Room;
   otherParticipant: UserPreview; // The other user (not the current user)
   lastMessage: Message | null;
@@ -183,13 +183,13 @@ import type { MessageDeliveryStatus } from './enums';
 
 // --- messages_db.messages ---
 export interface Message {
-  id: string;                          // UUID
+  id: string; // UUID
   room_id: number;
   sender_id: number;
   content: string;
   delivery_status: MessageDeliveryStatus;
   is_read: boolean;
-  created_at: string;                  // ISO 8601 datetime (sorted DESC in DB)
+  created_at: string; // ISO 8601 datetime (sorted DESC in DB)
 }
 
 // Message enriched with sender info (for display in UI)
@@ -215,7 +215,7 @@ export interface SendMessagePayload {
 
 > Invitations are a frontend-layer concept built on top of room membership logic.
 > They trigger the creation of a private room upon acceptance.
-> 
+>
 > The exact invitation table structure will be confirmed by the backend team.
 > This is a reasonable assumption based on the feature spec.
 
@@ -278,8 +278,8 @@ export interface PaginatedResponse<T> {
 export interface ApiError {
   message: string;
   status: number;
-  code?: string;   // e.g., 'INVALID_CREDENTIALS', 'USER_NOT_FOUND'
-  field?: string;  // For field-level validation errors
+  code?: string; // e.g., 'INVALID_CREDENTIALS', 'USER_NOT_FOUND'
+  field?: string; // For field-level validation errors
 }
 ```
 
@@ -297,26 +297,26 @@ export const loginSchema = z.object({
 });
 export type LoginFormData = z.infer<typeof loginSchema>;
 
-
-export const registerStep1Schema = z.object({
-  email: z.string().email('Please enter a valid email'),
-  username: z
-    .string()
-    .min(3, 'Username must be at least 3 characters')
-    .max(100, 'Username must be less than 100 characters')
-    .regex(/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers, and underscores'),
-  password: z
-    .string()
-    .min(8, 'Password must be at least 8 characters')
-    .regex(/[A-Z]/, 'Must include at least one uppercase letter')
-    .regex(/[0-9]/, 'Must include at least one number'),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: 'Passwords do not match',
-  path: ['confirmPassword'],
-});
+export const registerStep1Schema = z
+  .object({
+    email: z.string().email('Please enter a valid email'),
+    username: z
+      .string()
+      .min(3, 'Username must be at least 3 characters')
+      .max(100, 'Username must be less than 100 characters')
+      .regex(/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers, and underscores'),
+    password: z
+      .string()
+      .min(8, 'Password must be at least 8 characters')
+      .regex(/[A-Z]/, 'Must include at least one uppercase letter')
+      .regex(/[0-9]/, 'Must include at least one number'),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  });
 export type RegisterStep1FormData = z.infer<typeof registerStep1Schema>;
-
 
 export const registerStep2Schema = z.object({
   display_name: z
@@ -327,26 +327,25 @@ export const registerStep2Schema = z.object({
 });
 export type RegisterStep2FormData = z.infer<typeof registerStep2Schema>;
 
-
 export const forgotPasswordSchema = z.object({
   email: z.string().email('Please enter a valid email'),
 });
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
-
-export const resetPasswordSchema = z.object({
-  new_password: z
-    .string()
-    .min(8, 'Password must be at least 8 characters')
-    .regex(/[A-Z]/, 'Must include at least one uppercase letter')
-    .regex(/[0-9]/, 'Must include at least one number'),
-  confirmPassword: z.string(),
-}).refine((data) => data.new_password === data.confirmPassword, {
-  message: 'Passwords do not match',
-  path: ['confirmPassword'],
-});
+export const resetPasswordSchema = z
+  .object({
+    new_password: z
+      .string()
+      .min(8, 'Password must be at least 8 characters')
+      .regex(/[A-Z]/, 'Must include at least one uppercase letter')
+      .regex(/[0-9]/, 'Must include at least one number'),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.new_password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  });
 export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
-
 
 // src/features/profile/schemas/profile.schemas.ts
 export const updateProfileSchema = z.object({
@@ -385,7 +384,6 @@ export interface AuthStoreActions {
 
 export type AuthStore = AuthStoreState & AuthStoreActions;
 
-
 // src/stores/ui.store.ts — interface definition
 
 import type { Theme } from '@/types/enums';
@@ -407,7 +405,6 @@ export interface UIStoreActions {
 }
 
 export type UIStore = UIStoreState & UIStoreActions;
-
 
 // src/stores/chat.store.ts — interface definition
 
@@ -438,11 +435,31 @@ export type ChatStore = ChatStoreState & ChatStoreActions;
 
 ```typescript
 // src/types/index.ts
-export type { UserStatus, RoomType, RoomMemberRole, MessageDeliveryStatus, InvitationStatus, Theme } from './enums';
+export type {
+  UserStatus,
+  RoomType,
+  RoomMemberRole,
+  MessageDeliveryStatus,
+  InvitationStatus,
+  Theme,
+} from './enums';
 export type { AuthUser, UserProfile, UserWithProfile, UserPreview } from './user.types';
-export type { RegisterStep1Payload, RegisterStep2Payload, LoginPayload, LoginResponse, ForgotPasswordPayload, ResetPasswordPayload, UpdateProfilePayload } from './auth.types';
+export type {
+  RegisterStep1Payload,
+  RegisterStep2Payload,
+  LoginPayload,
+  LoginResponse,
+  ForgotPasswordPayload,
+  ResetPasswordPayload,
+  UpdateProfilePayload,
+} from './auth.types';
 export type { Room, RoomMember, Conversation } from './room.types';
 export type { Message, MessageWithSender, SendMessagePayload } from './message.types';
-export type { Invitation, InvitationWithUsers, SendInvitationPayload, RespondToInvitationPayload } from './invitation.types';
+export type {
+  Invitation,
+  InvitationWithUsers,
+  SendInvitationPayload,
+  RespondToInvitationPayload,
+} from './invitation.types';
 export type { ApiResponse, PaginatedResponse, ApiError } from './api.types';
 ```

@@ -2,23 +2,23 @@
 
 ## 1. Tech Stack (Locked)
 
-| Tool | Version | Purpose |
-|------|---------|---------|
-| React | 19.x | UI framework |
-| Vite | 6.x | Build tool & dev server |
-| TypeScript | 5.x (strict) | Type safety |
-| Tailwind CSS | v4 | Utility-first styling |
-| shadcn/ui | latest | Component library |
-| React Router | v7 | Client-side routing (lazy pages) |
-| Zustand | 5.x | Global state management |
-| React Hook Form | 7.x | Form state & validation |
-| Zod | 3.x | Schema validation |
-| Axios | 1.x | HTTP client (cookie-based) |
-| Framer Motion | 11.x | Animations |
-| MSW | 2.x | Mock Service Worker (API mocking) |
-| Lucide React | latest | Icon library |
-| date-fns | 4.x | Date formatting |
-| clsx + tailwind-merge | latest | Class utilities |
+| Tool                  | Version      | Purpose                           |
+| --------------------- | ------------ | --------------------------------- |
+| React                 | 19.x         | UI framework                      |
+| Vite                  | 6.x          | Build tool & dev server           |
+| TypeScript            | 5.x (strict) | Type safety                       |
+| Tailwind CSS          | v4           | Utility-first styling             |
+| shadcn/ui             | latest       | Component library                 |
+| React Router          | v7           | Client-side routing (lazy pages)  |
+| Zustand               | 5.x          | Global state management           |
+| React Hook Form       | 7.x          | Form state & validation           |
+| Zod                   | 3.x          | Schema validation                 |
+| Axios                 | 1.x          | HTTP client (cookie-based)        |
+| Framer Motion         | 11.x         | Animations                        |
+| MSW                   | 2.x          | Mock Service Worker (API mocking) |
+| Lucide React          | latest       | Icon library                      |
+| date-fns              | 4.x          | Date formatting                   |
+| clsx + tailwind-merge | latest       | Class utilities                   |
 
 ---
 
@@ -50,6 +50,7 @@ const user: any = fetchUser();
 ## 3. Component Rules
 
 ### File Naming
+
 - **Pages:** `PascalCase.tsx` → `LoginPage.tsx`
 - **Components:** `PascalCase.tsx` → `UserAvatar.tsx`
 - **Hooks:** `camelCase.ts` prefixed with `use` → `useAuth.ts`
@@ -59,6 +60,7 @@ const user: any = fetchUser();
 - **Utils:** `camelCase.utils.ts` → `date.utils.ts`
 
 ### Component Structure (order inside file)
+
 ```typescript
 // 1. Imports (external → internal → types → styles)
 import { useState } from 'react';
@@ -85,6 +87,7 @@ export function UserCard({ user, onSelect }: Props) {
 ```
 
 ### Rules
+
 - **One component per file.**
 - **No default exports** except for lazy-loaded pages (required by React.lazy).
 - **Named exports everywhere else.**
@@ -292,6 +295,7 @@ npx lint-staged
 ```
 
 **Pre-commit hooks run:**
+
 1. ESLint with auto-fix
 2. Prettier formatting
 3. TypeScript type-check (`tsc --noEmit`)
@@ -317,6 +321,7 @@ VITE_APP_NAME=Storm Chat
 ## 15. Git Conventions
 
 ### Branch Naming
+
 ```
 feature/short-description
 fix/short-description
@@ -324,6 +329,7 @@ chore/short-description
 ```
 
 ### Commit Messages (Conventional Commits)
+
 ```
 feat: add user invitation flow
 fix: correct avatar upload validation
@@ -334,6 +340,7 @@ docs: update design system tokens
 ```
 
 ### Pull Request Rules
+
 - PRs must pass all lint checks.
 - PRs must have a clear description of what changed.
 - No WIP commits in main branch.

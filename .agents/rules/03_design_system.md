@@ -7,7 +7,7 @@
 ## 1. Design Principles
 
 1. **Clarity first.** Information density is high in chat apps. Every element earns its place.
-2. **Speed feels real.** Transitions and animations should make the app feel *fast*, not decorative.
+2. **Speed feels real.** Transitions and animations should make the app feel _fast_, not decorative.
 3. **Depth through restraint.** Shadows, borders, and backgrounds create hierarchy — not decoration.
 4. **Accessible by default.** Every color combination meets WCAG AA contrast (4.5:1 for text).
 
@@ -20,110 +20,111 @@
 ```css
 :root {
   /* === Brand === */
-  --color-brand-50:  #eff6ff;
+  --color-brand-50: #eff6ff;
   --color-brand-100: #dbeafe;
   --color-brand-200: #bfdbfe;
   --color-brand-400: #60a5fa;
-  --color-brand-500: #3b82f6;   /* Primary action color */
-  --color-brand-600: #2563eb;   /* Hover state */
-  --color-brand-700: #1d4ed8;   /* Pressed state */
+  --color-brand-500: #3b82f6; /* Primary action color */
+  --color-brand-600: #2563eb; /* Hover state */
+  --color-brand-700: #1d4ed8; /* Pressed state */
   --color-brand-900: #1e3a8a;
 
   /* === Neutrals (Light Mode) === */
-  --color-bg-base:        #ffffff;
-  --color-bg-subtle:      #f8fafc;    /* Sidebar, panels */
-  --color-bg-muted:       #f1f5f9;    /* Hover, code blocks */
-  --color-bg-overlay:     #e2e8f0;    /* Active states */
-  
-  --color-border:         #e2e8f0;
-  --color-border-strong:  #cbd5e1;
-  
-  --color-text-primary:   #0f172a;    /* Main content */
-  --color-text-secondary: #475569;    /* Timestamps, labels */
-  --color-text-muted:     #94a3b8;    /* Placeholders, hints */
-  --color-text-inverse:   #ffffff;
-  
+  --color-bg-base: #ffffff;
+  --color-bg-subtle: #f8fafc; /* Sidebar, panels */
+  --color-bg-muted: #f1f5f9; /* Hover, code blocks */
+  --color-bg-overlay: #e2e8f0; /* Active states */
+
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+
+  --color-text-primary: #0f172a; /* Main content */
+  --color-text-secondary: #475569; /* Timestamps, labels */
+  --color-text-muted: #94a3b8; /* Placeholders, hints */
+  --color-text-inverse: #ffffff;
+
   /* === Status Colors === */
-  --color-online:  #22c55e;   /* Green */
-  --color-away:    #f59e0b;   /* Amber */
-  --color-busy:    #ef4444;   /* Red */
-  --color-offline: #94a3b8;   /* Gray */
-  
+  --color-online: #22c55e; /* Green */
+  --color-away: #f59e0b; /* Amber */
+  --color-busy: #ef4444; /* Red */
+  --color-offline: #94a3b8; /* Gray */
+
   /* === Semantic === */
-  --color-success:  #22c55e;
-  --color-warning:  #f59e0b;
-  --color-error:    #ef4444;
-  --color-info:     #3b82f6;
-  
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+
   /* === Message Bubbles === */
-  --color-bubble-own:     #3b82f6;    /* Sender's own messages */
+  --color-bubble-own: #3b82f6; /* Sender's own messages */
   --color-bubble-own-text: #ffffff;
-  --color-bubble-other:   #f1f5f9;    /* Other person's messages */
+  --color-bubble-other: #f1f5f9; /* Other person's messages */
   --color-bubble-other-text: #0f172a;
-  
+
   /* === Spacing & Radius === */
-  --radius-sm:   4px;
-  --radius-md:   8px;
-  --radius-lg:   12px;
-  --radius-xl:   16px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
   --radius-full: 9999px;
-  
+
   /* === Shadows === */
-  --shadow-sm:  0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md:  0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-  --shadow-lg:  0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.05);
-  --shadow-xl:  0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.04);
-  
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.04);
+
   /* === Z-Index === */
-  --z-dropdown:  100;
-  --z-sticky:    200;
-  --z-overlay:   300;
-  --z-modal:     400;
-  --z-toast:     500;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 500;
 }
 
 /* Dark Mode */
 .dark {
-  --color-bg-base:        #0f172a;
-  --color-bg-subtle:      #1e293b;
-  --color-bg-muted:       #334155;
-  --color-bg-overlay:     #475569;
-  
-  --color-border:         #1e293b;
-  --color-border-strong:  #334155;
-  
-  --color-text-primary:   #f8fafc;
+  --color-bg-base: #0f172a;
+  --color-bg-subtle: #1e293b;
+  --color-bg-muted: #334155;
+  --color-bg-overlay: #475569;
+
+  --color-border: #1e293b;
+  --color-border-strong: #334155;
+
+  --color-text-primary: #f8fafc;
   --color-text-secondary: #94a3b8;
-  --color-text-muted:     #64748b;
-  
-  --color-bubble-other:   #1e293b;
+  --color-text-muted: #64748b;
+
+  --color-bubble-other: #1e293b;
   --color-bubble-other-text: #f8fafc;
 }
 ```
 
 ### Tailwind Extension (tailwind.config.ts)
+
 ```typescript
 export default {
   theme: {
     extend: {
       colors: {
         brand: {
-          50:  'var(--color-brand-50)',
+          50: 'var(--color-brand-50)',
           500: 'var(--color-brand-500)',
           600: 'var(--color-brand-600)',
           700: 'var(--color-brand-700)',
         },
         bg: {
-          base:    'var(--color-bg-base)',
-          subtle:  'var(--color-bg-subtle)',
-          muted:   'var(--color-bg-muted)',
+          base: 'var(--color-bg-base)',
+          subtle: 'var(--color-bg-subtle)',
+          muted: 'var(--color-bg-muted)',
           overlay: 'var(--color-bg-overlay)',
         },
         // ... etc
       },
-    }
-  }
-}
+    },
+  },
+};
 ```
 
 ---
@@ -131,6 +132,7 @@ export default {
 ## 3. Typography
 
 ### Font Stack
+
 - **Display / Headings:** `"Instrument Serif"` (Google Fonts) — elegant, confident editorial feel
 - **UI / Body:** `"DM Sans"` (Google Fonts) — modern, readable, slightly geometric, not overused
 - **Monospace:** `"JetBrains Mono"` — for code snippets if needed
@@ -138,15 +140,18 @@ export default {
 ```html
 <!-- In index.html -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<link
+  href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Instrument+Serif:ital@0;1&display=swap"
+  rel="stylesheet"
+/>
 ```
 
 ```css
 /* In globals.css */
 :root {
   --font-display: 'Instrument Serif', Georgia, serif;
-  --font-body:    'DM Sans', system-ui, sans-serif;
-  --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
 body {
@@ -159,17 +164,17 @@ body {
 
 ### Type Scale
 
-| Token | Size | Weight | Line Height | Usage |
-|-------|------|--------|-------------|-------|
-| `text-display` | 32px | 400 (serif) | 1.2 | Auth page headings |
-| `text-heading-lg` | 24px | 600 | 1.3 | Page titles |
-| `text-heading-md` | 20px | 600 | 1.3 | Section titles |
-| `text-heading-sm` | 16px | 600 | 1.4 | Card titles |
-| `text-body-lg` | 16px | 400 | 1.6 | Body copy |
-| `text-body-md` | 14px | 400 | 1.5 | Default body, messages |
-| `text-body-sm` | 13px | 400 | 1.4 | Secondary info |
-| `text-caption` | 12px | 400 | 1.4 | Timestamps, labels |
-| `text-label` | 12px | 500 | 1.4 | Form labels, badges |
+| Token             | Size | Weight      | Line Height | Usage                  |
+| ----------------- | ---- | ----------- | ----------- | ---------------------- |
+| `text-display`    | 32px | 400 (serif) | 1.2         | Auth page headings     |
+| `text-heading-lg` | 24px | 600         | 1.3         | Page titles            |
+| `text-heading-md` | 20px | 600         | 1.3         | Section titles         |
+| `text-heading-sm` | 16px | 600         | 1.4         | Card titles            |
+| `text-body-lg`    | 16px | 400         | 1.6         | Body copy              |
+| `text-body-md`    | 14px | 400         | 1.5         | Default body, messages |
+| `text-body-sm`    | 13px | 400         | 1.4         | Secondary info         |
+| `text-caption`    | 12px | 400         | 1.4         | Timestamps, labels     |
+| `text-label`      | 12px | 500         | 1.4         | Form labels, badges    |
 
 ---
 
@@ -179,8 +184,8 @@ Uses Tailwind's default 4px base grid. Custom semantic spacing:
 
 ```css
 /* Semantic spacing tokens */
---spacing-page-x: 1.5rem;     /* 24px — horizontal page padding */
---spacing-sidebar-w: 260px;   /* Sidebar width */
+--spacing-page-x: 1.5rem; /* 24px — horizontal page padding */
+--spacing-sidebar-w: 260px; /* Sidebar width */
 --spacing-conv-list-w: 320px; /* Conversation list column width */
 ```
 
@@ -189,6 +194,7 @@ Uses Tailwind's default 4px base grid. Custom semantic spacing:
 ## 5. Component Tokens & Patterns
 
 ### Sidebar
+
 ```
 Width: 260px (fixed)
 Background: var(--color-bg-subtle)
@@ -208,6 +214,7 @@ User section (bottom):
 ```
 
 ### Conversation List Item
+
 ```
 Height: 72px
 Padding: 12px 16px
@@ -223,6 +230,7 @@ Unread badge: brand-500 bg, white text, font-semibold, rounded-full
 ```
 
 ### Message Bubble
+
 ```
 Own messages (right-aligned):
   - Background: var(--color-brand-500)
@@ -244,6 +252,7 @@ Group spacing: 2px between consecutive same-sender messages
 ```
 
 ### Input (Message)
+
 ```
 Background: var(--color-bg-muted)
 Border: 1px solid var(--color-border)
@@ -254,6 +263,7 @@ Height: auto (expands to multiline, max 6 lines)
 ```
 
 ### Button Variants
+
 ```
 Primary:
   - bg brand-500, text white
@@ -277,6 +287,7 @@ Destructive:
 ```
 
 ### Avatar with Status Ring
+
 ```
 Sizes: 24px (xs), 32px (sm), 40px (md), 48px (lg), 80px (xl)
 
@@ -291,6 +302,7 @@ Status ring:
 ```
 
 ### Auth Card
+
 ```
 Background: white
 Border: 1px solid var(--color-border)
@@ -302,6 +314,7 @@ Width: 100%
 ```
 
 ### Invitation Card
+
 ```
 Background: var(--color-bg-subtle)
 Border: 1px solid var(--color-border)
@@ -319,6 +332,7 @@ Actions: right-aligned, accept (primary sm), decline (ghost sm, destructive)
 ## 6. Page Layout Specs
 
 ### Auth Layout
+
 ```
 Background: var(--color-bg-subtle) with subtle dot-grid pattern
 Content: centered card, max-width 420px
@@ -327,6 +341,7 @@ Footer: copyright, version
 ```
 
 Auth background pattern (CSS):
+
 ```css
 .auth-bg {
   background-color: var(--color-bg-subtle);
@@ -336,6 +351,7 @@ Auth background pattern (CSS):
 ```
 
 ### Chat Layout
+
 ```
 Full viewport height, no scroll on outer container
 Column 1 (Sidebar):     260px fixed, full height
@@ -344,6 +360,7 @@ Column 3 (Chat area):   flex-1, scrollable message list
 ```
 
 ### Chat Area
+
 ```
 Header:  64px fixed top (contact info + actions)
 Messages: flex-1, overflow-y auto, padding 24px
@@ -362,53 +379,53 @@ export const animations = {
   pageEnter: {
     initial: { opacity: 0, y: 8 },
     animate: { opacity: 1, y: 0 },
-    exit:    { opacity: 0, y: -4 },
+    exit: { opacity: 0, y: -4 },
     transition: { duration: 0.2, ease: 'easeOut' },
   },
-  
+
   // Modal
   modalOverlay: {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
-    exit:    { opacity: 0 },
+    exit: { opacity: 0 },
     transition: { duration: 0.15 },
   },
   modalContent: {
     initial: { opacity: 0, scale: 0.96, y: 8 },
     animate: { opacity: 1, scale: 1, y: 0 },
-    exit:    { opacity: 0, scale: 0.96 },
+    exit: { opacity: 0, scale: 0.96 },
     transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] },
   },
-  
+
   // Message appear
   messageIn: {
     initial: { opacity: 0, y: 6 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.15 },
   },
-  
+
   // Sidebar slide (mobile)
   sidebarSlide: {
     initial: { x: '-100%' },
     animate: { x: 0 },
-    exit:    { x: '-100%' },
+    exit: { x: '-100%' },
     transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] },
   },
-  
+
   // Toast
   toastSlide: {
     initial: { opacity: 0, y: 16, scale: 0.96 },
     animate: { opacity: 1, y: 0, scale: 1 },
-    exit:    { opacity: 0, y: 8, scale: 0.96 },
+    exit: { opacity: 0, y: 8, scale: 0.96 },
     transition: { duration: 0.2 },
   },
-  
+
   // Status pulse (online indicator)
   statusPulse: {
     animate: { scale: [1, 1.3, 1], opacity: [1, 0.7, 1] },
     transition: { repeat: Infinity, duration: 2.5, ease: 'easeInOut' },
   },
-  
+
   // List item stagger
   listItem: (index: number) => ({
     initial: { opacity: 0, x: -8 },
@@ -425,6 +442,7 @@ export const animations = {
 Use **Lucide React** exclusively. No other icon library.
 
 Key icons:
+
 ```
 MessageSquare  → Chat nav item
 Users          → Find people / invitations
@@ -442,6 +460,7 @@ Circle         → Status (offline)
 ```
 
 Icon sizes:
+
 - `16px` — inline with text, labels
 - `20px` — default nav and action icons
 - `24px` — page headers, large buttons
@@ -467,20 +486,25 @@ Key dark mode adjustments are handled by CSS variables — no separate `dark:` T
 
 Every async action must show a loading state.
 
-| Context | Component |
-|---------|-----------|
-| Page load (lazy) | `<PageLoader />` — centered spinner + app logo |
-| Button submit | Spinner icon replaces button icon + disabled state |
-| Conversation loading | Skeleton (3 animated shimmer message bubbles) |
-| Contact list loading | Skeleton (5 shimmer conversation items) |
-| Avatar upload | Progress ring around avatar preview |
-| Search results | Spinner in dropdown |
+| Context              | Component                                          |
+| -------------------- | -------------------------------------------------- |
+| Page load (lazy)     | `<PageLoader />` — centered spinner + app logo     |
+| Button submit        | Spinner icon replaces button icon + disabled state |
+| Conversation loading | Skeleton (3 animated shimmer message bubbles)      |
+| Contact list loading | Skeleton (5 shimmer conversation items)            |
+| Avatar upload        | Progress ring around avatar preview                |
+| Search results       | Spinner in dropdown                                |
 
 Skeleton shimmer CSS:
+
 ```css
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 .skeleton {
   background: linear-gradient(
@@ -499,14 +523,15 @@ Skeleton shimmer CSS:
 
 ## 11. Responsive Breakpoints
 
-| Name | Size | Description |
-|------|------|-------------|
-| `sm` | 640px | Large phones |
-| `md` | 768px | Tablets |
-| `lg` | 1024px | Laptops |
+| Name | Size   | Description              |
+| ---- | ------ | ------------------------ |
+| `sm` | 640px  | Large phones             |
+| `md` | 768px  | Tablets                  |
+| `lg` | 1024px | Laptops                  |
 | `xl` | 1280px | Desktops (target layout) |
 
 Chat layout behavior:
+
 - **< 768px:** Single column. Sidebar is a drawer (slide from left). Show either conv list OR chat area.
 - **768px – 1024px:** Two columns. Sidebar icon-only (collapsed). Conv list + chat area.
 - **> 1024px:** Full 3-column layout.
@@ -516,6 +541,7 @@ Chat layout behavior:
 ## 12. Empty States
 
 All empty states use a consistent pattern:
+
 - Centered content
 - Subtle icon (64px, muted color)
 - Short heading (body-lg, font-medium)
@@ -523,6 +549,7 @@ All empty states use a consistent pattern:
 - Optional CTA button
 
 Examples:
+
 ```
 No conversations yet
 → Icon: MessageSquare

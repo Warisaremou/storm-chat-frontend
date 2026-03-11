@@ -19,12 +19,14 @@
 ## 2. Setup
 
 ### Install
+
 ```bash
 npm install -D msw
 npx msw init public/ --save
 ```
 
 ### `src/mocks/browser.ts`
+
 ```typescript
 import { setupWorker } from 'msw/browser';
 import { handlers } from './index';
@@ -33,6 +35,7 @@ export const worker = setupWorker(...handlers);
 ```
 
 ### `src/mocks/index.ts`
+
 ```typescript
 import { authHandlers } from './handlers/auth.handlers';
 import { usersHandlers } from './handlers/users.handlers';
@@ -50,6 +53,7 @@ export const handlers = [
 ```
 
 ### Enabled via env var
+
 ```env
 VITE_ENABLE_MSW=true
 ```
@@ -229,7 +233,7 @@ export const MOCK_MESSAGES: Record<number, Message[]> = {
       id: 'msg-101-2',
       room_id: 101,
       sender_id: 1,
-      content: 'Yes, I\'ll be there in 10 minutes.',
+      content: "Yes, I'll be there in 10 minutes.",
       delivery_status: 'read',
       is_read: true,
       created_at: '2025-06-10T14:25:00Z',
@@ -337,7 +341,7 @@ export const authHandlers = [
   // POST /auth/login
   http.post(`${BASE}/auth/login`, async ({ request }) => {
     await delay(500);
-    const body = await request.json() as { identifier: string; password: string };
+    const body = (await request.json()) as { identifier: string; password: string };
 
     if (
       (body.identifier === 'charlie@example.com' || body.identifier === 'charlie_dev') &&
@@ -354,7 +358,7 @@ export const authHandlers = [
 
     return HttpResponse.json(
       { message: 'Invalid credentials', code: 'INVALID_CREDENTIALS' },
-      { status: 401 }
+      { status: 401 },
     );
   }),
 
@@ -363,7 +367,7 @@ export const authHandlers = [
     await delay(600);
     return HttpResponse.json(
       { data: { user: MOCK_CURRENT_USER }, message: 'Account created' },
-      { status: 201 }
+      { status: 201 },
     );
   }),
 
@@ -424,8 +428,7 @@ export const usersHandlers = [
 
     const results = MOCK_USERS.filter(
       (u) =>
-        u.username.toLowerCase().includes(query) ||
-        u.display_name?.toLowerCase().includes(query)
+        u.username.toLowerCase().includes(query) || u.display_name?.toLowerCase().includes(query),
     );
 
     return HttpResponse.json({ data: results });
@@ -470,23 +473,22 @@ export const useAuthStore = create<AuthStore>()(
       isLoading: false,
       error: null,
 
-      setAuth: (user, profile) =>
-        set({ user, profile, isAuthenticated: true, error: null }),
+      setAuth: (user, profile) => set({ user, profile, isAuthenticated: true, error: null }),
 
-      clearAuth: () =>
-        set({ user: null, profile: null, isAuthenticated: false }),
+      clearAuth: () => set({ user: null, profile: null, isAuthenticated: false }),
 
       // ... other actions
     }),
     {
-      name: 'storm-chat-auth',        // localStorage key
-      partialize: (state) => ({        // Only persist these fields
+      name: 'storm-chat-auth', // localStorage key
+      partialize: (state) => ({
+        // Only persist these fields
         user: state.user,
         profile: state.profile,
         isAuthenticated: state.isAuthenticated,
       }),
-    }
-  )
+    },
+  ),
 );
 ```
 
@@ -498,11 +500,11 @@ export const useAuthStore = create<AuthStore>()(
 
 For development and testing:
 
-| Field | Value |
-|-------|-------|
-| Email | `charlie@example.com` |
-| Username | `charlie_dev` |
-| Password | `Password1` |
+| Field    | Value                 |
+| -------- | --------------------- |
+| Email    | `charlie@example.com` |
+| Username | `charlie_dev`         |
+| Password | `Password1`           |
 
 ---
 

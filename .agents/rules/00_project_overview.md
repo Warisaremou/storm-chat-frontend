@@ -6,14 +6,14 @@
 
 ## 📚 Documentation Files
 
-| File | Purpose |
-|------|---------|
-| `01_PROJECT_RULES.md` | Code conventions, ESLint, Prettier, Husky, Git workflow |
-| `02_PROJECT_PLAN.md` | Features, pages, routing, component breakdown, implementation phases |
-| `03_DESIGN_SYSTEM.md` | Colors, typography, spacing, tokens, component patterns, animations |
-| `04_TYPES_AND_INTERFACES.md` | All TypeScript interfaces/types derived from DB modeling |
-| `05_FOLDER_STRUCTURE.md` | Complete project folder and file organization |
-| `06_MOCK_DATA_STRATEGY.md` | Mock data approach, mock service layer, simulated auth |
+| File                         | Purpose                                                              |
+| ---------------------------- | -------------------------------------------------------------------- |
+| `01_PROJECT_RULES.md`        | Code conventions, ESLint, Prettier, Husky, Git workflow              |
+| `02_PROJECT_PLAN.md`         | Features, pages, routing, component breakdown, implementation phases |
+| `03_DESIGN_SYSTEM.md`        | Colors, typography, spacing, tokens, component patterns, animations  |
+| `04_TYPES_AND_INTERFACES.md` | All TypeScript interfaces/types derived from DB modeling             |
+| `05_FOLDER_STRUCTURE.md`     | Complete project folder and file organization                        |
+| `06_MOCK_DATA_STRATEGY.md`   | Mock data approach, mock service layer, simulated auth               |
 
 ---
 
@@ -34,6 +34,7 @@
 ## 🎯 Project Goal
 
 Build a clean, modern, real-time chat application UI. This phase focuses exclusively on:
+
 1. Pixel-perfect UI implementation
 2. Correct TypeScript typing (aligned with backend DB models)
 3. Full navigation flow (auth → onboarding → chat)

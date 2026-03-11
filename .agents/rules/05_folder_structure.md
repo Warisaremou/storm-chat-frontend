@@ -204,6 +204,7 @@ storm-chat/
 ## Key File Starters
 
 ### `src/main.tsx`
+
 ```typescript
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -226,6 +227,7 @@ enableMocking().then(() => {
 ```
 
 ### `src/App.tsx`
+
 ```typescript
 import { RouterProvider } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
@@ -250,6 +252,7 @@ export default function App() {
 ```
 
 ### `src/routes/index.tsx`
+
 ```typescript
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
@@ -298,6 +301,7 @@ export const router = createBrowserRouter([
 ```
 
 ### `src/lib/axios.ts`
+
 ```typescript
 import axios from 'axios';
 import type { ApiError } from '@/types/api.types';
@@ -307,7 +311,7 @@ export const apiClient = axios.create({
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    Accept: 'application/json',
   },
   timeout: 10_000,
 });
@@ -328,11 +332,12 @@ apiClient.interceptors.response.use(
       field: error.response?.data?.field,
     };
     return Promise.reject(apiError);
-  }
+  },
 );
 ```
 
 ### `vite.config.ts`
+
 ```typescript
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
