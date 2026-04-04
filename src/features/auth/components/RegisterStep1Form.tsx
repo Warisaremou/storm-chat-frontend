@@ -36,9 +36,15 @@ export function RegisterStep1Form() {
   const onSubmit = async (values: z.infer<typeof registerStep1Schema>) => {
     try {
       setIsLoading(true);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { confirmPassword: _c, ...payload } = values;
+      void _c;
+
       await authService.register(payload);
+      await authService.login({
+        identity: payload.email,
+        password: payload.password,
+      });
+
       toast.success('Account created successfully');
       void navigate(PATHS.REGISTER_SETUP);
     } catch (err: unknown) {
@@ -49,6 +55,10 @@ export function RegisterStep1Form() {
     }
   };
 
+  const handleSubmit = form.handleSubmit((values) => {
+    void onSubmit(values);
+  });
+
   return (
     <div className="w-full">
       <div className="mb-6 text-center">
@@ -57,12 +67,7 @@ export function RegisterStep1Form() {
       </div>
 
       <Form {...form}>
-        <form
-          onSubmit={(e) => {
-            void form.handleSubmit(onSubmit)(e);
-          }}
-          className="space-y-4"
-        >
+        <form onSubmit={handleSubmit} className="space-y-4">
           <FormField
             control={form.control}
             name="email"
@@ -84,7 +89,7 @@ export function RegisterStep1Form() {
               <FormItem>
                 <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input placeholder="storm_user" {...field} />
+                  <Input placeholder="stormuser" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

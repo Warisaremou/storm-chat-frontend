@@ -9,17 +9,34 @@ export interface RegisterStep1Payload {
 
 export interface RegisterStep2Payload {
   display_name: string;
-  avatar?: File | null;
+  avatar_url?: string;
 }
 
 export interface LoginPayload {
-  identifier: string;
+  identity: string;     
   password: string;
 }
 
 export interface LoginResponse {
-  user: AuthUser;
+  message: string;
+}
+
+// Réponse de GET /users/me
+export interface MeResponse {
+  id: string;
+  username: string;
+  email: string;
+  role: string;
+  created_at: string;
   profile: UserProfile;
+}
+
+// Réponse de POST /auth/register
+export interface RegisterResponse {
+  id: string;
+  username: string;
+  email: string;
+  created_at: string;
 }
 
 export interface ForgotPasswordPayload {
@@ -33,6 +50,8 @@ export interface ResetPasswordPayload {
 
 export interface UpdateProfilePayload {
   display_name?: string;
+  avatar_url?: string;
   status?: UserStatus;
-  avatar?: File;
 }
+
+export type { AuthUser, UserProfile };

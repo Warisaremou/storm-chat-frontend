@@ -1,9 +1,13 @@
-import type { UserProfile, UserStatus } from '@/types';
+import type { UserStatus } from '@/types';
 import { StatusBadge } from './StatusBadge';
 import { cn } from '@/lib/utils';
 
 interface UserAvatarProps {
-  profile: Pick<UserProfile, 'display_name' | 'avatar_url' | 'status'> | null;
+  profile: {
+    display_name: string | null;
+    avatar_url: string | null;
+    status: UserStatus;
+  } | null;
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   showStatus?: boolean;
   className?: string;
@@ -35,7 +39,7 @@ export function UserAvatar({
   className,
   statusOverride,
   avatarOverride,
-}: UserAvatarProps) {
+}: Readonly<UserAvatarProps>) {
   const { avatar: avatarSize, badge: badgeSize, offset } = sizeMap[size];
   const displayName = profile?.display_name ?? '?';
   const status = statusOverride ?? profile?.status ?? 'offline';

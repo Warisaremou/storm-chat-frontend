@@ -8,19 +8,16 @@ async function enableMocking() {
   if (import.meta.env.VITE_ENABLE_MSW !== 'true') return;
   const { worker } = await import('./mocks/browser');
   return worker.start({ onUnhandledRequest: 'bypass' });
+} 
+
+await enableMocking();
+try {
+  await useAuthStore.getState().init();
+} catch {
+  // ignore
 }
-
-void enableMocking().then(async () => {
-  // Initialize auth state from cookie (/me) before rendering
-  try {
-    await useAuthStore.getState().init();
-  } catch {
-    // ignore init errors — app will render as unauthenticated
-  }
-
-  createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-      <App />
-    </StrictMode>,
-  );
-});
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);

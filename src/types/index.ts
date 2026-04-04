@@ -12,6 +12,8 @@ export type {
   RegisterStep2Payload,
   LoginPayload,
   LoginResponse,
+  RegisterResponse, 
+  MeResponse, 
   ForgotPasswordPayload,
   ResetPasswordPayload,
   UpdateProfilePayload,

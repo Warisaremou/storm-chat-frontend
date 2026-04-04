@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const loginSchema = z.object({
-  identifier: z.string().min(1, 'Email or username is required'),
+  identity: z.string().min(1, 'Email or username is required'), // ← identity au lieu de identifier
   password: z.string().min(1, 'Password is required'),
 });
 
@@ -11,13 +11,9 @@ export const registerStep1Schema = z
     username: z
       .string()
       .min(3, 'Username must be at least 3 characters')
-      .max(100, 'Username must be less than 100 characters')
-      .regex(/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers, and underscores'),
-    password: z
-      .string()
-      .min(8, 'Password must be at least 8 characters')
-      .regex(/[A-Z]/, 'Must include at least one uppercase letter')
-      .regex(/[0-9]/, 'Must include at least one number'),
+      .max(50, 'Username must be less than 50 characters') // ← max 50 comme le backend
+      .regex(/^[a-zA-Z0-9]+$/, 'Username can only contain letters and numbers'), // ← alphanum uniquement (pas d'underscore)
+    password: z.string().min(8, 'Password must be at least 8 characters'),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -30,7 +26,7 @@ export const registerStep2Schema = z.object({
     .string()
     .min(2, 'Display name must be at least 2 characters')
     .max(255, 'Display name is too long'),
-  avatar: z.instanceof(File).optional().nullable(),
+  avatar_url: z.string().url('Please enter a valid URL').optional().or(z.literal('')), // ← avatar_url string au lieu de File
 });
 
 export const forgotPasswordSchema = z.object({
@@ -39,11 +35,7 @@ export const forgotPasswordSchema = z.object({
 
 export const resetPasswordSchema = z
   .object({
-    new_password: z
-      .string()
-      .min(8, 'Password must be at least 8 characters')
-      .regex(/[A-Z]/, 'Must include at least one uppercase letter')
-      .regex(/[0-9]/, 'Must include at least one number'),
+    new_password: z.string().min(8, 'Password must be at least 8 characters'),
     confirmPassword: z.string(),
   })
   .refine((data) => data.new_password === data.confirmPassword, {

@@ -24,7 +24,7 @@ export function LoginForm() {
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      identifier: '',
+      identity: '',
       password: '',
     },
   });
@@ -32,9 +32,9 @@ export function LoginForm() {
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     try {
       await login(values);
-      void navigate(PATHS.CHAT);
+      navigate(PATHS.CHAT);
     } catch {
-      // Error is handled in auth store
+      // Error handled in store
     }
   };
 
@@ -52,15 +52,10 @@ export function LoginForm() {
       )}
 
       <Form {...form}>
-        <form
-          onSubmit={(e) => {
-            void form.handleSubmit(onSubmit)(e);
-          }}
-          className="space-y-4"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             control={form.control}
-            name="identifier"
+            name="identity"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email or Username</FormLabel>
@@ -77,15 +72,7 @@ export function LoginForm() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <div className="flex items-center justify-between">
-                  <FormLabel>Password</FormLabel>
-                  <Link
-                    to={PATHS.FORGOT_PASSWORD}
-                    className="text-sm font-medium text-primary hover:underline"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
+                <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input type="password" placeholder="••••••••" {...field} />
                 </FormControl>

@@ -54,8 +54,8 @@ export const authHandlers = [
       id: String(Date.now()),
       email: body.email,
       username: body.username,
+      role: 'user',
       created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
     };
 
     const newProfile: UserProfile = {
@@ -70,23 +70,6 @@ export const authHandlers = [
     REGISTERED_USERS.push({ user: newUser, profile: newProfile, password: body.password });
 
     return HttpResponse.json({ data: { user: newUser }, message: 'Account created' }, { status: 201 });
-  }),
-
-  http.post(`${BASE}/auth/setup`, async ({ request }) => {
-    await delay(400);
-    const formData = await request.formData();
-    const displayName = formData.get('display_name') as string;
-
-    const userToUpdate = REGISTERED_USERS.find((u) => u.user.id === CURRENT_USER_ID) || REGISTERED_USERS[REGISTERED_USERS.length - 1];
-
-    if (userToUpdate) {
-      userToUpdate.profile.display_name = displayName || userToUpdate.profile.display_name;
-      return HttpResponse.json({ data: { profile: userToUpdate.profile }, message: 'Profile setup complete' });
-    }
-
-    const updatedProfile = { ...MOCK_CURRENT_PROFILE, display_name: displayName || MOCK_CURRENT_PROFILE.display_name };
-
-    return HttpResponse.json({ data: { profile: updatedProfile }, message: 'Profile setup complete' });
   }),
 
   http.post(`${BASE}/auth/forgot-password`, async () => {
@@ -106,7 +89,7 @@ export const authHandlers = [
   }),
 
   // also expose /me at service root to match backend
-  http.get(`${BASE}/me`, async () => {
+  http.get(`${BASE}/users/me`, async () => {
     await delay(300);
     if (!CURRENT_USER_ID) {
       return HttpResponse.json({ message: 'Not authenticated' }, { status: 401 });

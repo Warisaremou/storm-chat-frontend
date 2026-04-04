@@ -41,8 +41,8 @@ export function ResetPasswordForm() {
 
     try {
       setIsLoading(true);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { confirmPassword: _c, ...payload } = values;
+      void _c;
       await authService.resetPassword({ ...payload, token });
       toast.success('Password successfully reset');
       void navigate(PATHS.LOGIN);
@@ -54,6 +54,10 @@ export function ResetPasswordForm() {
     }
   };
 
+  const handleSubmit = form.handleSubmit((values) => {
+    void onSubmit(values);
+  });
+
   return (
     <div className="w-full">
       <div className="mb-6 text-center">
@@ -62,12 +66,7 @@ export function ResetPasswordForm() {
       </div>
 
       <Form {...form}>
-        <form
-          onSubmit={(e) => {
-            void form.handleSubmit(onSubmit)(e);
-          }}
-          className="space-y-4"
-        >
+        <form onSubmit={handleSubmit} className="space-y-4">
           <FormField
             control={form.control}
             name="new_password"

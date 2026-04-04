@@ -44,6 +44,10 @@ export function ForgotPasswordForm() {
     }
   };
 
+  const handleSubmit = form.handleSubmit((values) => {
+    void onSubmit(values);
+  });
+
   if (isSent) {
     return (
       <div className="w-full text-center">
@@ -73,12 +77,7 @@ export function ForgotPasswordForm() {
       </div>
 
       <Form {...form}>
-        <form
-          onSubmit={(e) => {
-            void form.handleSubmit(onSubmit)(e);
-          }}
-          className="space-y-4"
-        >
+        <form onSubmit={handleSubmit} className="space-y-4">
           <FormField
             control={form.control}
             name="email"

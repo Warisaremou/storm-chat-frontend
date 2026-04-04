@@ -12,23 +12,23 @@ export const invitationsService = {
     return response.data;
   },
 
-  acceptInvitation: async (id: number) => {
-    const response = await apiClient.post<{ roomId: number }>(`/invitations/${id}/accept`);
+  acceptInvitation: async (id: string) => {
+    const response = await apiClient.post<{ roomId: string }>(`/invitations/${id}/accept`);
     return response.data;
   },
 
-  declineInvitation: async (id: number) => {
+  declineInvitation: async (id: string) => {
     const response = await apiClient.post<void>(`/invitations/${id}/decline`);
     return response.data;
   },
 
-  cancelInvitation: async (id: number) => {
+  cancelInvitation: async (id: string) => {
     const response = await apiClient.delete<void>(`/invitations/${id}`);
     return response.data;
   },
 
-  sendInvitation: async (receiverId: number) => {
-    const response = await apiClient.post<void>('/invitations', { receiverId });
+  sendInvitation: async (receiverId: string) => {
+    const response = await apiClient.post<void>('/invitations', { receiver_id: receiverId });
     return response.data;
   },
 };

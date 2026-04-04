@@ -20,7 +20,7 @@ const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 const wrap = (el: React.ReactNode) => <Suspense fallback={<PageLoader />}>{el}</Suspense>;
 
 export const router = createBrowserRouter([
-  { path: '/', element: <Navigate to={PATHS.CHAT} replace /> },
+  { path: '/', element: <Navigate to={PATHS.LOGIN} replace /> },
   {
     element: (
       <GuestGuard>

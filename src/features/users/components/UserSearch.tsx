@@ -12,9 +12,9 @@ import { invitationsService } from '@/services/invitations.service';
 export function UserSearch() {
   const { query, setQuery, results, isLoading } = useUserSearch();
   const { invitations } = useInvitations();
-  const [sendingId, setSendingId] = useState<number | null>(null);
+  const [sendingId, setSendingId] = useState<string | null>(null);
 
-  const handleInvite = async (userId: number) => {
+  const handleInvite = async (userId: string) => {
     try {
       setSendingId(userId);
       await invitationsService.sendInvitation(userId);
@@ -26,10 +26,68 @@ export function UserSearch() {
     }
   };
 
-  const isInvited = (userId: number) => {
+  const isInvited = (userId: string) =>
+    invitations.sent.some((inv) => inv.receiver_id === userId) ||
+    invitations.received.some((inv) => inv.sender_id === userId);
+
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <div className="flex justify-center py-8">
+          <LoadingSpinner size="md" />
+        </div>
+      );
+    }
+
+    if (results.length > 0) {
+      return results.map((user) => {
+        const alreadyInvited = isInvited(user.id);
+        return (
+          <div
+            key={user.id}
+            className="flex items-center justify-between p-3 rounded-lg border border-border bg-card hover:bg-muted/50 transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <UserAvatar profile={user} size="md" />
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold">{user.display_name}</span>
+                <span className="text-xs text-muted-foreground">@{user.username}</span>
+              </div>
+            </div>
+
+            {alreadyInvited ? (
+              <Button variant="ghost" disabled className="h-8 gap-1.5 text-success">
+                <Check className="h-4 w-4" />
+                Connect
+              </Button>
+            ) : (
+              <Button
+                size="sm"
+                className="h-8 gap-1.5"
+                onClick={() => void handleInvite(user.id)}
+                disabled={sendingId === user.id}
+              >
+                {sendingId === user.id ? <LoadingSpinner size="sm" /> : <UserPlus className="h-4 w-4" />}
+                Invite
+              </Button>
+            )}
+          </div>
+        );
+      });
+    }
+
+    if (query) {
+      return (
+        <div className="text-center py-8 text-muted-foreground text-sm italic">
+          No users found matching &quot;{query}&quot;
+        </div>
+      );
+    }
+
     return (
-      invitations.sent.some((inv) => inv.receiver_id === userId) ||
-      invitations.received.some((inv) => inv.sender_id === userId)
+      <div className="text-center py-8 text-muted-foreground text-sm italic">
+        Start typing to search for users...
+      </div>
     );
   };
 
@@ -45,60 +103,7 @@ export function UserSearch() {
         />
       </div>
 
-      <div className="max-h-[300px] overflow-y-auto space-y-2 pr-1">
-        {isLoading ? (
-          <div className="flex justify-center py-8">
-            <LoadingSpinner size="md" />
-          </div>
-        ) : results.length > 0 ? (
-          results.map((user) => {
-            const alreadyInvited = isInvited(user.id);
-            return (
-              <div
-                key={user.id}
-                className="flex items-center justify-between p-3 rounded-lg border border-border bg-card hover:bg-muted/50 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <UserAvatar profile={user} size="md" />
-                  <div className="flex flex-col">
-                    <span className="text-sm font-semibold">{user.display_name}</span>
-                    <span className="text-xs text-muted-foreground">@{user.username}</span>
-                  </div>
-                </div>
-
-                {alreadyInvited ? (
-                  <Button variant="ghost" disabled className="h-8 gap-1.5 text-success">
-                    <Check className="h-4 w-4" />
-                    Connect
-                  </Button>
-                ) : (
-                  <Button
-                    size="sm"
-                    className="h-8 gap-1.5"
-                    onClick={() => void handleInvite(user.id)}
-                    disabled={sendingId === user.id}
-                  >
-                    {sendingId === user.id ? (
-                      <LoadingSpinner size="sm" />
-                    ) : (
-                      <UserPlus className="h-4 w-4" />
-                    )}
-                    Invite
-                  </Button>
-                )}
-              </div>
-            );
-          })
-        ) : query ? (
-          <div className="text-center py-8 text-muted-foreground text-sm italic">
-            No users found matching &quot;{query}&quot;
-          </div>
-        ) : (
-          <div className="text-center py-8 text-muted-foreground text-sm italic">
-            Type to search for people...
-          </div>
-        )}
-      </div>
+      <div className="max-h-75 overflow-y-auto space-y-2 pr-1">{renderContent()}</div>
     </div>
   );
 }

@@ -1,17 +1,17 @@
 import type { UserStatus } from './enums';
 
 export interface AuthUser {
-  id: number;
+  id: string;           
   email: string;
   username: string;
+  role: string;         
   created_at: string;
-  updated_at: string;
 }
 
 export interface UserProfile {
-  user_id: number;
-  display_name: string | null;
-  avatar_url: string | null;
+  user_id: string;      
+  display_name: string;
+  avatar_url: string;
   status: UserStatus;
   created_at: string;
   updated_at: string;
@@ -22,7 +22,7 @@ export interface UserWithProfile extends AuthUser {
 }
 
 export interface UserPreview {
-  id: number;
+  id: string;
   username: string;
   display_name: string | null;
   avatar_url: string | null;

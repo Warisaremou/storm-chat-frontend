@@ -1,5 +1,6 @@
-import axios, { type AxiosError } from 'axios';
-import type { ApiError } from '@/types/api.types';
+import axios, { type AxiosError, type AxiosRequestConfig } from 'axios';
+
+type RetryConfig = AxiosRequestConfig & { _retry?: boolean };
 
 export const apiClient = axios.create({
   baseURL: (import.meta.env.VITE_API_URL as string | undefined) ?? 'http://localhost:3000',
@@ -11,19 +12,30 @@ export const apiClient = axios.create({
   timeout: 10_000,
 });
 
-apiClient.interceptors.request.use((config) => {
-  return config;
-});
+apiClient.interceptors.request.use((config) => config);
 
 apiClient.interceptors.response.use(
   (response) => response,
-  (axiosError: AxiosError<{ message?: string; code?: string; field?: string }>) => {
-    const apiError: ApiError = {
-      message: axiosError.response?.data?.message ?? 'An unexpected error occurred',
-      status: axiosError.response?.status ?? 0,
-      code: axiosError.response?.data?.code,
-      field: axiosError.response?.data?.field,
-    };
-    return Promise.reject(new Error(apiError.message));
+  async (axiosError: AxiosError<{ error?: string; message?: string }>) => {
+    const config = (axiosError.config as RetryConfig) ?? {};
+    const url = config.url ?? '';
+    const isRefreshCall = url.includes('/auth/refresh');
+
+    if (axiosError.response?.status === 401 && !config._retry && !isRefreshCall) {
+      config._retry = true;
+      try {
+        await apiClient.post('/auth/refresh', {}, { withCredentials: true });
+        return apiClient.request(config);
+      } catch {
+        throw new Error('Session expired');
+      }
+    }
+
+    const message =
+      axiosError.response?.data?.error ??
+      axiosError.response?.data?.message ??
+      'An unexpected error occurred';
+
+    throw new Error(message);
   },
 );

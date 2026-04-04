@@ -12,49 +12,32 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Loader2, UploadCloud, User } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { PATHS } from '@/routes/paths';
 import { authService } from '@/services/auth.service';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 export function RegisterStep2Form() {
   const [isLoading, setIsLoading] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof registerStep2Schema>>({
     resolver: zodResolver(registerStep2Schema),
     defaultValues: {
       display_name: '',
-      // File inputs can't have a typed default - use undefined
-      avatar: undefined,
+      avatar_url: '',
     },
   });
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        toast.error('File size must be less than 2MB');
-        return;
-      }
-      form.setValue('avatar', file);
-      const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
-    }
-  };
-
-  const triggerFileInput = () => {
-    fileInputRef.current?.click();
-  };
 
   const onSubmit = async (values: z.infer<typeof registerStep2Schema>) => {
     try {
       setIsLoading(true);
-      await authService.setupProfile(values);
+      await authService.setupProfile({
+        display_name: values.display_name,
+        avatar_url: values.avatar_url ?? '',
+      });
       toast.success('Profile setup complete!');
       void navigate(PATHS.CHAT);
     } catch (err: unknown) {
@@ -64,6 +47,10 @@ export function RegisterStep2Form() {
       setIsLoading(false);
     }
   };
+
+  const handleSubmit = form.handleSubmit((values) => {
+    void onSubmit(values);
+  });
 
   return (
     <div className="w-full">
@@ -75,41 +62,7 @@ export function RegisterStep2Form() {
       </div>
 
       <Form {...form}>
-        <form
-          onSubmit={(e) => {
-            void form.handleSubmit(onSubmit)(e);
-          }}
-          className="space-y-6"
-        >
-          <div className="flex flex-col items-center justify-center space-y-4">
-            <button
-              type="button"
-              className="relative w-24 h-24 rounded-full border-2 border-dashed border-border bg-muted flex items-center justify-center overflow-hidden cursor-pointer hover:border-primary/50 transition-colors"
-              onClick={triggerFileInput}
-              aria-label="Upload profile picture"
-            >
-              {previewUrl ? (
-                <img src={previewUrl} alt="Avatar preview" className="w-full h-full object-cover" />
-              ) : (
-                <User className="w-10 h-10 text-muted-foreground" />
-              )}
-              <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                <UploadCloud className="w-6 h-6 text-white" />
-              </div>
-            </button>
-            <input
-              type="file"
-              ref={fileInputRef}
-              className="hidden"
-              accept="image/jpeg,image/png,image/gif"
-              onChange={handleFileChange}
-              aria-label="Profile picture file input"
-            />
-            <p className="text-xs text-muted-foreground">
-              Optional: Upload a profile picture (max 2MB)
-            </p>
-          </div>
-
+        <form onSubmit={handleSubmit} className="space-y-6">
           <FormField
             control={form.control}
             name="display_name"
@@ -118,6 +71,23 @@ export function RegisterStep2Form() {
                 <FormLabel>Display Name</FormLabel>
                 <FormControl>
                   <Input placeholder="John Doe" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="avatar_url"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Avatar URL{' '}
+                  <span className="text-muted-foreground text-xs">(optional)</span>
+                </FormLabel>
+                <FormControl>
+                  <Input placeholder="https://example.com/avatar.png" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

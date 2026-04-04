@@ -8,7 +8,7 @@ interface UserProfileModalProps {
   onStartChat?: () => void;
 }
 
-export function UserProfileModal({ user, onStartChat }: UserProfileModalProps) {
+export function UserProfileModal({ user, onStartChat }: Readonly<UserProfileModalProps>) {
   return (
     <div className="space-y-6">
       {/* Profile Header */}
