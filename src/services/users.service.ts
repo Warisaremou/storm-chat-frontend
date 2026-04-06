@@ -56,7 +56,7 @@ export const usersService = {
   searchUsers: async (query: string) => {
     try {
       const resp = await apiClient.get<{ data?: ServerProfilePayload[] } | ServerProfilePayload[]>(
-        `/search?q=${encodeURIComponent(query)}`,
+        `/users/search?q=${encodeURIComponent(query)}`,
       );
       const payload = (resp.data as { data?: ServerProfilePayload[] }).data ?? resp.data ?? [];
       const previews = Array.isArray(payload) ? payload.map(mapServerProfileToPreview) : [];
@@ -70,9 +70,9 @@ export const usersService = {
     }
   },
 
-  getUser: async (id: string) => {
-    const response = await apiClient.get<{ data: UserProfile }>(`/users/${id}`);
-    return response.data;
+  getUser: async (id: string): Promise<UserPreview> => {
+    const response = await apiClient.get<ServerProfilePayload>(`/users/${id}`);
+    return mapServerProfileToPreview(response.data);
   },
 
   getCurrentUser: async () => {

@@ -1,3 +1,5 @@
+import type { FormEventHandler } from 'react';
+import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type z } from 'zod';
@@ -27,30 +29,30 @@ export function RegisterStep2Form() {
     resolver: zodResolver(registerStep2Schema),
     defaultValues: {
       display_name: '',
-      avatar_url: '',
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof registerStep2Schema>) => {
-    try {
-      setIsLoading(true);
-      await authService.setupProfile({
-        display_name: values.display_name,
-        avatar_url: values.avatar_url ?? '',
-      });
-      toast.success('Profile setup complete!');
-      void navigate(PATHS.CHAT);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to setup profile';
-      toast.error(message);
-    } finally {
-      setIsLoading(false);
-    }
+  const onValidSubmit: SubmitHandler<z.infer<typeof registerStep2Schema>> = (values) => {
+    void (async () => {
+      try {
+        setIsLoading(true);
+        await authService.setupProfile({
+          display_name: values.display_name,
+        });
+        toast.success('Profile setup complete!');
+        void navigate(PATHS.CHAT);
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Failed to setup profile';
+        toast.error(message);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
   };
 
-  const handleSubmit = form.handleSubmit((values) => {
-    void onSubmit(values);
-  });
+  const onFormSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    void form.handleSubmit(onValidSubmit)(e);
+  };
 
   return (
     <div className="w-full">
@@ -62,7 +64,7 @@ export function RegisterStep2Form() {
       </div>
 
       <Form {...form}>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={onFormSubmit} className="space-y-6">
           <FormField
             control={form.control}
             name="display_name"
@@ -77,35 +79,9 @@ export function RegisterStep2Form() {
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="avatar_url"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Avatar URL{' '}
-                  <span className="text-muted-foreground text-xs">(optional)</span>
-                </FormLabel>
-                <FormControl>
-                  <Input placeholder="https://example.com/avatar.png" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Finish Setup
-          </Button>
-
-          <Button
-            type="button"
-            variant="ghost"
-            className="w-full"
-            onClick={() => void navigate(PATHS.CHAT)}
-          >
-            Skip for now
           </Button>
         </form>
       </Form>

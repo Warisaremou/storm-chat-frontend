@@ -1,10 +1,13 @@
 import { formatDistanceToNow } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useChatStore } from '@/stores/chat.store';
 import { UserAvatar } from '@/components/shared/UserAvatar';
 import { cn } from '@/lib/utils';
 import type { Conversation } from '@/types';
 import { PATHS } from '@/routes/paths';
+
+const spring = { type: 'spring' as const, stiffness: 400, damping: 30 };
 
 interface ConversationItemProps {
   conversation: Conversation;
@@ -26,43 +29,51 @@ export function ConversationItem({ conversation }: ConversationItemProps) {
     : '';
 
   return (
-    <button
+    <motion.button
+      type="button"
       onClick={handleSelect}
       className={cn(
-        'w-full flex items-center gap-3 p-3 transition-colors border-l-2',
-        isActive
-          ? 'bg-accent border-primary'
-          : 'bg-transparent border-transparent hover:bg-muted/50',
+        'relative flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left outline-none transition-colors',
+        !isActive && 'hover:bg-accent',
       )}
+      whileHover={{ scale: 1.01 }}
+      whileTap={{ scale: 0.99 }}
+      transition={spring}
     >
-      <UserAvatar
-        profile={conversation.otherParticipant}
-        size="md"
-        showStatus
-        statusOverride={
-          conversation.room.type === 'private' ? conversation.otherParticipant?.status : undefined
-        }
-      />
+      {isActive ? (
+        <motion.span
+          layoutId="conversation-active"
+          className="absolute inset-0 rounded-lg bg-muted"
+          transition={spring}
+        />
+      ) : null}
+      <span className="relative z-10 flex min-w-0 flex-1 items-center gap-2">
+        <UserAvatar profile={conversation.otherParticipant} size="sm" showStatus />
 
-      <div className="flex-1 min-w-0 text-left">
-        <div className="flex items-center justify-between gap-1 mb-0.5">
-          <span className="font-semibold text-sm truncate text-foreground">
-            {conversation.otherParticipant?.display_name || conversation.room.name}
-          </span>
-          <span className="text-[10px] text-muted-foreground whitespace-nowrap">{time}</span>
-        </div>
-
-        <div className="flex items-center justify-between gap-2">
-          <p className="text-xs text-muted-foreground truncate flex-1">
-            {lastMessage?.content || 'No messages yet'}
-          </p>
-          {conversation.unreadCount > 0 && (
-            <span className="min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground px-1">
-              {conversation.unreadCount}
+        <span className="min-w-0 flex-1">
+          <span className="flex items-center justify-between gap-1">
+            <span className="truncate text-sm font-medium text-foreground">
+              {conversation.otherParticipant?.display_name || conversation.room.name}
             </span>
-          )}
-        </div>
-      </div>
-    </button>
+            {time ? (
+              <span className="shrink-0 font-mono text-[10px] tabular-nums text-muted-foreground">
+                {time}
+              </span>
+            ) : null}
+          </span>
+
+          <span className="mt-0.5 flex items-center justify-between gap-1.5">
+            <span className="truncate text-xs text-muted-foreground">
+              {lastMessage?.content || 'No messages yet'}
+            </span>
+            {conversation.unreadCount > 0 ? (
+              <span className="flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-semibold text-primary-foreground">
+                {conversation.unreadCount}
+              </span>
+            ) : null}
+          </span>
+        </span>
+      </span>
+    </motion.button>
   );
 }

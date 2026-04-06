@@ -1,0 +1,37 @@
+Context: I am refactoring my Chat App to match a high-end, premium minimalist aesthetic inspired by Jordan Hughes and Emil Kowalski. I am using shadcn/ui, Tailwind CSS, and Framer Motion.
+
+Task: Refactor the [Target File/Component] with the following UI/UX constraints:
+
+Typography & Spacing:
+
+Use Geist Sans for primary text and Geist Mono for secondary data/timestamps.
+
+Increase whitespace significantly. Use generous padding (e.g., p-6 or p-8) and consistent gaps (gap-4 or gap-6).
+
+Visual Style (The Hughes Look):
+
+Borders: Replace heavy borders with subtle, low-opacity ones (e.g., border-zinc-200/50 or dark:border-zinc-800/50).
+
+Surfaces: Use a pure white (#FFFFFF) or very deep black (#09090b) background. Use a subtle offset for sidebars (e.g., bg-zinc-50/50).
+
+Shadows: Use very soft, diffused shadows (shadow-sm) or no shadows at all, relying on borders for separation.
+
+Radius: Ensure all shadcn components use a consistent rounded-xl (12px) or rounded-2xl.
+
+Micro-interactions (The Kowalski Touch):
+
+Integrate Framer Motion for all transitions.
+
+Use "Spring" physics instead of linear eases (e.g., type: "spring", stiffness: 400, damping: 30).
+
+Implement layoutId for active states (like selecting a chat) so the background highlight "slides" smoothly.
+
+Add subtle hover scales (whileHover={{ scale: 1.01 }}) and press effects (whileTap={{ scale: 0.98 }}).
+
+Refined UI Elements:
+
+Make the search bars and inputs very clean: minimal borders, subtle focus rings.
+
+Ensure message bubbles have refined tail-less designs with high-contrast text.
+
+Goal: The interface should feel "airy," precise, and sophisticated. Avoid any "default" or "generic" AI-generated look.

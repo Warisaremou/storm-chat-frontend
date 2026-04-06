@@ -1,7 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import { usersService } from '@/services/users.service';
 import type { UserPreview } from '@/types';
-import { toast } from 'sonner';
 
 export function useUserSearch() {
   const [results, setResults] = useState<UserPreview[]>([]);
@@ -18,7 +17,7 @@ export function useUserSearch() {
       const { data } = await usersService.searchUsers(q);
       setResults(data);
     } catch {
-      toast.error('Search failed');
+      setResults([]);
     } finally {
       setIsLoading(false);
     }

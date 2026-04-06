@@ -24,8 +24,11 @@ const sizeMap = {
 };
 
 function getInitials(name: string) {
-  return name
-    .split(' ')
+  const words = name.trim().split(/\s+/);
+  if (words.length === 1) {
+    return words[0].slice(0, 2).toUpperCase();
+  }
+  return words
     .slice(0, 2)
     .map((n) => n[0])
     .join('')

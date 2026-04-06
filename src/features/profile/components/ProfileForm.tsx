@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { updateProfileSchema, type UpdateProfileFormData } from '../schemas/profile.schemas';
@@ -29,6 +30,13 @@ export function ProfileForm({ profile, onSubmit, isLoading }: ProfileFormProps) 
       status: profile?.status || 'online',
     },
   });
+
+  useEffect(() => {
+    form.reset({
+      display_name: profile?.display_name || '',
+      status: profile?.status || 'online',
+    });
+  }, [profile, form]);
 
   return (
     <Form {...form}>

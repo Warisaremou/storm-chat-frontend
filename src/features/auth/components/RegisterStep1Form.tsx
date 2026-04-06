@@ -1,3 +1,5 @@
+import type { FormEventHandler } from 'react';
+import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type z } from 'zod';
@@ -33,41 +35,43 @@ export function RegisterStep1Form() {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof registerStep1Schema>) => {
-    try {
-      setIsLoading(true);
-      const { confirmPassword: _c, ...payload } = values;
-      void _c;
+  const onValidSubmit: SubmitHandler<z.infer<typeof registerStep1Schema>> = (values) => {
+    void (async () => {
+      try {
+        setIsLoading(true);
+        const { confirmPassword: _c, ...payload } = values;
+        void _c;
 
-      await authService.register(payload);
-      await authService.login({
-        identity: payload.email,
-        password: payload.password,
-      });
+        await authService.register(payload);
+        await authService.login({
+          identity: payload.email,
+          password: payload.password,
+        });
 
-      toast.success('Account created successfully');
-      void navigate(PATHS.REGISTER_SETUP);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to register';
-      toast.error(message);
-    } finally {
-      setIsLoading(false);
-    }
+        toast.success('Account created successfully');
+        void navigate(PATHS.REGISTER_SETUP);
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Failed to register';
+        toast.error(message);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
   };
 
-  const handleSubmit = form.handleSubmit((values) => {
-    void onSubmit(values);
-  });
+  const onFormSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    void form.handleSubmit(onValidSubmit)(e);
+  };
 
   return (
     <div className="w-full">
-      <div className="mb-6 text-center">
+      <div className="mb-8 text-center">
         <h2 className="text-2xl font-semibold tracking-tight text-foreground">Create account</h2>
-        <p className="text-sm text-muted-foreground mt-1">Start your journey with us</p>
+        <p className="mt-2 text-sm text-muted-foreground">Set up your profile in two quick steps</p>
       </div>
 
       <Form {...form}>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={onFormSubmit} className="space-y-6">
           <FormField
             control={form.control}
             name="email"
@@ -131,9 +135,12 @@ export function RegisterStep1Form() {
         </form>
       </Form>
 
-      <div className="mt-6 text-center text-sm">
-        <span className="text-muted-foreground">Already have an account? </span>
-        <Link to={PATHS.LOGIN} className="font-medium text-primary hover:underline">
+      <div className="mt-8 text-center text-sm text-muted-foreground">
+        Already have an account?{' '}
+        <Link
+          to={PATHS.LOGIN}
+          className="font-medium text-foreground underline underline-offset-4 hover:no-underline"
+        >
           Sign in
         </Link>
       </div>

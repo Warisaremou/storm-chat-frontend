@@ -1,14 +1,17 @@
 import { useState, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { useChatStore } from '@/stores/chat.store';
-import { useMessages } from '../hooks/useMessages';
-import { Send, Image, Smile, Plus } from 'lucide-react';
+import { useSendMessage } from '../hooks/useMessages';
+import { Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 
+const spring = { type: 'spring' as const, stiffness: 400, damping: 30 };
+
 export function MessageInput() {
   const activeConversationId = useChatStore((s) => s.activeConversationId);
-  const { sendMessage } = useMessages(activeConversationId);
+  const sendMessage = useSendMessage(activeConversationId);
   const [content, setContent] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -31,44 +34,34 @@ export function MessageInput() {
   };
 
   return (
-    <div className="p-4 bg-card border-t border-border shrink-0">
-      <div className="flex items-end gap-2 max-w-4xl mx-auto relative">
-        <div className="flex items-center gap-1 pb-1">
-          <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground">
-            <Plus className="h-5 w-5" />
-          </Button>
-          <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground">
-            <Image className="h-5 w-5" />
-          </Button>
-          <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground">
-            <Smile className="h-5 w-5" />
-          </Button>
-        </div>
-
-        <div className="flex-1 relative">
+    <div className="shrink-0 border-t border-border bg-background/80 px-6 py-5 backdrop-blur-sm">
+      <div className="relative mx-auto flex max-w-4xl items-end gap-3">
+        <div className="relative flex-1">
           <Textarea
             ref={textareaRef}
-            placeholder="Type a message..."
+            placeholder="Type a message…"
             value={content}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
-            className="min-h-[44px] max-h-32 pr-12 py-3 bg-muted/50 border-transparent focus-visible:ring-primary/20 resize-none scrollbar-none"
+            className="min-h-[48px] max-h-32 resize-none border-input bg-muted/50 py-3.5 pr-14 text-[15px] leading-relaxed shadow-none focus-visible:ring-ring/30 scrollbar-none"
             rows={1}
           />
-          <div className="absolute right-1.5 bottom-1.5">
-            <Button
-              size="icon"
-              className={cn(
-                'h-8 w-8 rounded-full transition-all duration-200',
-                content.trim()
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-muted text-muted-foreground',
-              )}
-              onClick={() => void handleSend()}
-              disabled={!content.trim()}
-            >
-              <Send className="h-4 w-4" />
-            </Button>
+          <div className="absolute bottom-2 right-2">
+            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} transition={spring}>
+              <Button
+                size="icon"
+                className={cn(
+                  'h-9 w-9 rounded-xl shadow-sm',
+                  content.trim()
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-muted text-muted-foreground',
+                )}
+                onClick={() => void handleSend()}
+                disabled={!content.trim()}
+              >
+                <Send className="h-4 w-4" />
+              </Button>
+            </motion.div>
           </div>
         </div>
       </div>
