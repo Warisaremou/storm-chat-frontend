@@ -1,14 +1,20 @@
 import { apiClient } from '@/lib/axios';
-import type { Message } from '@/types';
+import type { Message, MessagesPage } from '@/types';
 
 export const messagesService = {
-  getMessages: async (roomId: number) => {
-    const response = await apiClient.get<Message[]>(`/rooms/${roomId}/messages`);
-    return response.data;
+  getMessages: async (roomId: string, before?: string): Promise<MessagesPage> => {
+    const params = new URLSearchParams({ limit: '50' });
+    if (before) params.set('before', before);
+    const { data } = await apiClient.get<MessagesPage>(
+      `/messages/rooms/${roomId}/messages?${params.toString()}`,
+    );
+    return data;
   },
 
-  sendMessage: async (roomId: number, content: string) => {
-    const response = await apiClient.post<Message>(`/rooms/${roomId}/messages`, { content });
-    return response.data;
+  sendMessage: async (roomId: string, content: string): Promise<Message> => {
+    const { data } = await apiClient.post<Message>(`/messages/rooms/${roomId}/messages`, {
+      content,
+    });
+    return data;
   },
 };

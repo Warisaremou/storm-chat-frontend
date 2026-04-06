@@ -7,7 +7,6 @@ import { ModalManager } from './ModalManager';
 export function AppLayout() {
   const { theme } = useUIStore();
 
-  // Apply theme class to <html> element
   useEffect(() => {
     const root = document.documentElement;
     if (theme === 'dark') {
@@ -18,9 +17,9 @@ export function AppLayout() {
   }, [theme]);
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-background">
+    <div className="flex h-screen w-full overflow-hidden bg-muted">
       <Sidebar />
-      <main className="flex-1 overflow-hidden flex flex-col min-w-0">
+      <main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-background shadow-sm dark:shadow-none">
         <Outlet />
       </main>
       <ModalManager />

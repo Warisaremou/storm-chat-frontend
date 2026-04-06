@@ -1,37 +1,33 @@
-import { NavLink, useNavigate } from 'react-router-dom';
-import {
-  MessageSquare,
-  Users,
-  Settings,
-  LogOut,
-  PanelLeftClose,
-  PanelLeftOpen,
-} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { MessageSquare, LogOut, User, ChevronsUpDown, Sun, Moon } from 'lucide-react';
 import { PATHS } from '@/routes/paths';
 import { useAuthStore } from '@/stores/auth.store';
 import { useUIStore } from '@/stores/ui.store';
 import { UserAvatar } from '@/components/shared/UserAvatar';
-import { ThemeToggle } from '@/components/shared/ThemeToggle';
 import { cn } from '@/lib/utils';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
-
-interface NavItem {
-  to: string;
-  icon: React.ElementType;
-  label: string;
-}
-
-const navItems: NavItem[] = [
-  { to: PATHS.CHAT, icon: MessageSquare, label: 'Messages' },
-  { to: PATHS.INVITATIONS, icon: Users, label: 'Invitations' },
-  { to: PATHS.PROFILE_SETTINGS, icon: Settings, label: 'Settings' },
-];
+import { ConversationList } from '@/features/chat/components/ConversationList';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import type { Theme } from '@/types';
 
 export function Sidebar() {
-  const { profile, logout } = useAuthStore();
-  const { sidebarOpen, toggleSidebar } = useUIStore();
+  const { profile, user, logout } = useAuthStore();
   const navigate = useNavigate();
+  const theme = useUIStore((s) => s.theme);
+  const setTheme = useUIStore((s) => s.setTheme);
+
+  const displayName = profile?.display_name?.trim() || user?.username || 'Guest';
+  const secondaryLine = user?.email?.trim() || (user?.username ? `@${user.username}` : '');
 
   const handleLogout = async () => {
     try {
@@ -44,153 +40,86 @@ export function Sidebar() {
 
   return (
     <aside
-      className={cn(
-        'relative flex flex-col h-full bg-card border-r border-border transition-all duration-300 ease-in-out shrink-0',
-        sidebarOpen ? 'w-64' : 'w-16',
-      )}
+      className="flex h-full w-[260px] shrink-0 flex-col border-r border-border bg-card"
       aria-label="Sidebar navigation"
     >
-      <TooltipProvider delay={100}>
-        {/* Logo */}
-        <div className="flex items-center h-16 shrink-0 border-b border-border px-4">
-          <div className="bg-primary text-primary-foreground p-2 rounded-lg shrink-0">
-            <MessageSquare className="w-5 h-5" />
-          </div>
-          {sidebarOpen && <span className="ml-3 font-bold text-lg tracking-tight">Storm Chat</span>}
+      <div className="flex h-14 shrink-0 items-center gap-3 border-b border-border px-4">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-background">
+          <MessageSquare className="h-4 w-4 text-foreground" strokeWidth={1.75} />
         </div>
+        <span className="truncate text-sm font-semibold tracking-tight text-foreground">
+          Storm Chat
+        </span>
+      </div>
 
-        {/* Nav items */}
-        <nav
-          className={cn('flex flex-col gap-1 pt-3 flex-1', sidebarOpen ? 'px-3' : 'items-center')}
-          role="navigation"
-        >
-          {navItems.map(({ to, icon: Icon, label }) => (
-            <Tooltip key={to}>
-              <TooltipTrigger
-                render={(props) => (
-                  <NavLink
-                    to={to}
-                    end={to === PATHS.CHAT}
-                    className={({ isActive }) =>
-                      cn(
-                        'flex items-center rounded-lg transition-colors outline-none h-10',
-                        sidebarOpen ? 'px-3 w-full gap-3' : 'w-10 justify-center',
-                        isActive
-                          ? 'bg-primary text-primary-foreground'
-                          : 'text-muted-foreground hover:bg-accent hover:text-foreground',
-                      )
-                    }
-                    aria-label={label}
-                    {...props}
-                  >
-                    <Icon className="w-5 h-5 shrink-0" />
-                    {sidebarOpen && <span className="text-sm font-medium">{label}</span>}
-                  </NavLink>
+      <div className="flex min-h-0 flex-1 flex-col px-3 pt-4">
+        <ConversationList />
+      </div>
+
+      <div className="shrink-0 border-t border-border p-2">
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            className={cn(
+              'flex w-full items-center gap-2 rounded-lg px-2 py-2 outline-none',
+              'hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card',
+            )}
+          >
+            <UserAvatar profile={profile} size="sm" showStatus />
+            <div className="min-w-0 flex-1 text-left">
+              <span className="block truncate text-sm font-medium text-foreground">
+                {displayName}
+              </span>
+              {secondaryLine ? (
+                <span className="block truncate text-xs text-muted-foreground">
+                  {secondaryLine}
+                </span>
+              ) : null}
+            </div>
+            <ChevronsUpDown className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="top" align="start" sideOffset={8} className="min-w-56">
+            <div className="flex gap-2 px-2 py-2">
+              <UserAvatar profile={profile} size="md" showStatus />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium text-foreground">{displayName}</p>
+                {secondaryLine ? (
+                  <p className="truncate text-xs text-muted-foreground">{secondaryLine}</p>
+                ) : (
+                  <p className="truncate text-xs text-muted-foreground">Signed in</p>
                 )}
-              />
-              {!sidebarOpen && (
-                <TooltipContent side="right">
-                  <p>{label}</p>
-                </TooltipContent>
-              )}
-            </Tooltip>
-          ))}
-        </nav>
-
-        {/* Bottom actions */}
-        <div
-          className={cn(
-            'flex flex-col gap-2 pb-4 pt-2 border-t border-border',
-            sidebarOpen ? 'px-3' : 'items-center',
-          )}
-        >
-          {/* Theme toggle */}
-          <ThemeToggle showLabel={sidebarOpen} />
-
-          {/* Logout */}
-          <Tooltip>
-            <TooltipTrigger
-              render={(props) => (
-                <button
-                  type="button"
-                  className={cn(
-                    'flex items-center rounded-lg transition-colors outline-none h-10 text-muted-foreground hover:bg-destructive/10 hover:text-destructive',
-                    sidebarOpen ? 'px-3 w-full gap-3' : 'w-10 justify-center',
-                  )}
-                  aria-label="Logout"
-                  {...props}
-                  onClick={(e) => {
-                    void handleLogout();
-                    props.onClick?.(e);
-                  }}
-                >
-                  <LogOut className="w-5 h-5 shrink-0" />
-                  {sidebarOpen && <span className="text-sm font-medium">Logout</span>}
-                </button>
-              )}
-            />
-            {!sidebarOpen && (
-              <TooltipContent side="right">
-                <p>Logout</p>
-              </TooltipContent>
-            )}
-          </Tooltip>
-
-          {/* User Avatar */}
-          <Tooltip>
-            <TooltipTrigger
-              render={(props) => (
-                <button
-                  type="button"
-                  className={cn(
-                    'flex items-center rounded-lg hover:opacity-80 transition-opacity outline-none h-12',
-                    sidebarOpen
-                      ? 'px-2 w-full gap-3 bg-muted/30 border border-border'
-                      : 'justify-center',
-                  )}
-                  aria-label="Your profile"
-                  {...props}
-                  onClick={(e) => {
-                    void navigate(PATHS.PROFILE_SETTINGS);
-                    props.onClick?.(e);
-                  }}
-                >
-                  <UserAvatar profile={profile} size="sm" showStatus />
-                  {sidebarOpen && (
-                    <div className="flex flex-col items-start overflow-hidden">
-                      <span className="text-sm font-semibold truncate w-full">
-                        {profile?.display_name ?? 'Guest'}
-                      </span>
-                      <span className="text-xs text-muted-foreground truncate w-full">
-                        View profile
-                      </span>
-                    </div>
-                  )}
-                </button>
-              )}
-            />
-            {!sidebarOpen && (
-              <TooltipContent side="right">
-                <p>{profile?.display_name ?? 'Profile'}</p>
-              </TooltipContent>
-            )}
-          </Tooltip>
-        </div>
-
-        {/* Collapse toggle */}
-        <button
-          type="button"
-          onClick={toggleSidebar}
-          className="absolute -right-3 top-20 w-6 h-6 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent z-10 shadow-sm transition-colors"
-          aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
-        >
-          {sidebarOpen ? (
-            <PanelLeftClose className="w-3.5 h-3.5" />
-          ) : (
-            <PanelLeftOpen className="w-3.5 h-3.5" />
-          )}
-        </button>
-      </TooltipProvider>
+              </div>
+            </div>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => void navigate(PATHS.PROFILE_SETTINGS)}>
+              <User className="mr-2 size-4" />
+              Account
+            </DropdownMenuItem>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+                Theme
+              </DropdownMenuLabel>
+              <DropdownMenuRadioGroup
+                value={theme}
+                onValueChange={(value) => setTheme(value as Theme)}
+              >
+                <DropdownMenuRadioItem value="light">
+                  <Sun className="mr-2 size-4" />
+                  Light
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="dark">
+                  <Moon className="mr-2 size-4" />
+                  Dark
+                </DropdownMenuRadioItem>
+              </DropdownMenuRadioGroup>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem variant="destructive" onClick={() => void handleLogout()}>
+              <LogOut className="mr-2 size-4" />
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </aside>
   );
 }

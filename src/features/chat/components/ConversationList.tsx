@@ -2,12 +2,15 @@ import { useConversations } from '../hooks/useConversations';
 import { ConversationItem } from './ConversationItem';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
 import { EmptyState } from '@/components/shared/EmptyState';
-import { MessageSquareText, Search } from 'lucide-react';
+import { MessageSquarePlus, MessageSquareText, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { useUIStore } from '@/stores/ui.store';
 import { useState } from 'react';
 
 export function ConversationList() {
   const { conversations, isLoadingConversations } = useConversations();
+  const openModal = useUIStore((s) => s.openModal);
   const [search, setSearch] = useState('');
 
   const filteredConversations = conversations.filter((c) => {
@@ -16,24 +19,59 @@ export function ConversationList() {
   });
 
   if (isLoadingConversations && conversations.length === 0) {
-    return <LoadingSpinner size="md" className="my-8" />;
+    return (
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <div className="flex shrink-0 items-center justify-between gap-2 px-1">
+          <h2 className="text-xs font-medium tracking-wide text-muted-foreground">Messages</h2>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            className="text-muted-foreground hover:text-foreground"
+            aria-label="Start a new conversation"
+            title="New conversation"
+            onClick={() => openModal('userSearch')}
+          >
+            <MessageSquarePlus className="size-4" />
+          </Button>
+        </div>
+        <div className="flex flex-1 flex-col items-center justify-center py-8">
+          <LoadingSpinner size="md" />
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
-      <div className="p-4 border-b border-border">
+    <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+      <div className="flex shrink-0 items-center justify-between gap-2 px-1">
+        <h2 className="text-xs font-medium tracking-wide text-muted-foreground">Messages</h2>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          className="text-muted-foreground hover:text-foreground"
+          aria-label="Start a new conversation"
+          title="New conversation"
+          onClick={() => openModal('userSearch')}
+        >
+          <MessageSquarePlus className="size-4" />
+        </Button>
+      </div>
+
+      <div className="mt-3 shrink-0 pb-3">
         <div className="relative">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search chats..."
-            className="pl-8 h-9"
+            placeholder="Search…"
+            className="h-9 border-input bg-background/80 pl-8 text-sm"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto pb-2">
         {filteredConversations.length > 0 ? (
           filteredConversations.map((conversation) => (
             <ConversationItem key={conversation.id} conversation={conversation} />
@@ -41,13 +79,9 @@ export function ConversationList() {
         ) : (
           <EmptyState
             icon={MessageSquareText}
-            title={search ? 'No results found' : 'No conversations'}
-            description={
-              search
-                ? `No chat found matching "${search}"`
-                : 'Start a chat with someone to see it here.'
-            }
-            className="py-12"
+            title={search ? 'No results' : 'No conversations'}
+            description={search ? `Nothing matches “${search}”.` : 'Start a chat to see it here.'}
+            className="py-8"
           />
         )}
       </div>

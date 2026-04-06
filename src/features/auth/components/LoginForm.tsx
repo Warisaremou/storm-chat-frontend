@@ -1,3 +1,5 @@
+import type { FormEventHandler } from 'react';
+import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type z } from 'zod';
@@ -29,30 +31,36 @@ export function LoginForm() {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof loginSchema>) => {
-    try {
-      await login(values);
-      navigate(PATHS.CHAT);
-    } catch {
-      // Error handled in store
-    }
+  const onValidSubmit: SubmitHandler<z.infer<typeof loginSchema>> = (values) => {
+    void (async () => {
+      try {
+        await login(values);
+        void navigate(PATHS.CHAT);
+      } catch {
+        // Error handled in store
+      }
+    })();
+  };
+
+  const onFormSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    void form.handleSubmit(onValidSubmit)(e);
   };
 
   return (
     <div className="w-full">
-      <div className="mb-6 text-center">
+      <div className="mb-8 text-center">
         <h2 className="text-2xl font-semibold tracking-tight text-foreground">Welcome back</h2>
-        <p className="text-sm text-muted-foreground mt-1">Enter your details to sign in</p>
+        <p className="mt-2 text-sm text-muted-foreground">Sign in to continue</p>
       </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-destructive/10 text-destructive border border-destructive/20 rounded-md text-sm text-center">
+        <div className="mb-6 rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-center text-sm text-red-600 dark:text-red-400">
           {error}
         </div>
       )}
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={onFormSubmit} className="space-y-6">
           <FormField
             control={form.control}
             name="identity"
@@ -88,9 +96,12 @@ export function LoginForm() {
         </form>
       </Form>
 
-      <div className="mt-6 text-center text-sm">
-        <span className="text-muted-foreground">Don&apos;t have an account? </span>
-        <Link to={PATHS.REGISTER} className="font-medium text-primary hover:underline">
+      <div className="mt-8 text-center text-sm text-muted-foreground">
+        Don&apos;t have an account?{' '}
+        <Link
+          to={PATHS.REGISTER}
+          className="font-medium text-foreground underline underline-offset-4 hover:no-underline"
+        >
           Sign up
         </Link>
       </div>

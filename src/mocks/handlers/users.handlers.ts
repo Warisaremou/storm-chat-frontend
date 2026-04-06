@@ -5,15 +5,14 @@ const BASE = (import.meta.env.VITE_API_URL as string | undefined) ?? 'http://loc
 
 export const usersHandlers = [
   // GET /search?q= — recherche par email ou username
-  http.get(`${BASE}/search`, async ({ request }) => {
+  http.get(`${BASE}/users/search`, async ({ request }) => {
     await delay(400);
     const url = new URL(request.url);
     const query = url.searchParams.get('q')?.toLowerCase() ?? '';
 
     const results = MOCK_USERS.filter(
       (u) =>
-        u.username.toLowerCase().includes(query) ||
-        u.display_name?.toLowerCase().includes(query),
+        u.username.toLowerCase().includes(query) || u.display_name?.toLowerCase().includes(query),
     );
 
     return HttpResponse.json({ data: results });

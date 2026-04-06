@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { ChatLayout } from '@/components/layout/ChatLayout';
-import { ConversationList } from '@/features/chat/components/ConversationList';
+import { RoomInfoPanel } from '@/features/chat/components/RoomInfoPanel';
 import { useChatStore } from '@/stores/chat.store';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { MessageSquarePlus } from 'lucide-react';
@@ -15,40 +14,44 @@ export default function ChatPage() {
   const activeConversationId = useChatStore((s) => s.activeConversationId);
   const setActiveConversation = useChatStore((s) => s.setActiveConversation);
   const openModal = useUIStore((s) => s.openModal);
+  const setRoomInfoOpen = useUIStore((s) => s.setRoomInfoOpen);
 
-  // Sync URL ID with Store
   useEffect(() => {
     if (conversationId) {
-      const id = parseInt(conversationId, 10);
-      if (!isNaN(id) && id !== activeConversationId) {
-        setActiveConversation(id);
+      if (conversationId !== activeConversationId) {
+        setActiveConversation(conversationId);
       }
     } else if (activeConversationId !== null) {
-      // If no ID in URL but we have one in store, maybe we should clear it or ignore
-      // Typically we follow the URL
       setActiveConversation(null);
     }
   }, [conversationId, activeConversationId, setActiveConversation]);
 
+  useEffect(() => {
+    if (!activeConversationId) setRoomInfoOpen(false);
+  }, [activeConversationId, setRoomInfoOpen]);
+
   return (
-    <ChatLayout conversationPanel={<ConversationList />}>
+    <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
       {activeConversationId ? (
-        <div className="flex flex-col h-full overflow-hidden">
-          <ConversationHeader />
-          <MessageList />
-          <MessageInput />
+        <div className="flex min-h-0 min-w-0 flex-1 overflow-hidden">
+          <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+            <ConversationHeader />
+            <MessageList />
+            <MessageInput />
+          </div>
+          <RoomInfoPanel />
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center h-full bg-background">
+        <div className="flex h-full flex-1 flex-col items-center justify-center bg-transparent">
           <EmptyState
             icon={MessageSquarePlus}
             title="No conversation selected"
-            description="Choose a conversation from the list to start chatting or find new community members."
+            description="Pick a chat from the list or start a new one."
             actionLabel="Start a new chat"
             onAction={() => openModal('userSearch')}
           />
         </div>
       )}
-    </ChatLayout>
+    </div>
   );
 }

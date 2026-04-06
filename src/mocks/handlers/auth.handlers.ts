@@ -10,13 +10,20 @@ const REGISTERED_USERS: { user: AuthUser; profile: UserProfile; password: string
 let CURRENT_USER_ID: string | null = null;
 
 export const authHandlers = [
-  http.post(`${BASE}/auth/login`, async ({ request }) => {
+  http.post(`${BASE}/users/auth/login`, async ({ request }) => {
     await delay(500);
-    const body = (await request.json()) as { identifier?: string; identity?: string; password: string };
+    const body = (await request.json()) as {
+      identifier?: string;
+      identity?: string;
+      password: string;
+    };
     const identity = body.identity ?? body.identifier;
 
     // 1. Check default mock user
-    if ((identity === 'charlie@example.com' || identity === 'charlie_dev') && body.password === 'Password1') {
+    if (
+      (identity === 'charlie@example.com' || identity === 'charlie_dev') &&
+      body.password === 'Password1'
+    ) {
       CURRENT_USER_ID = MOCK_CURRENT_USER.id;
       return HttpResponse.json({
         data: {
@@ -29,7 +36,8 @@ export const authHandlers = [
 
     // 2. Check in-memory session users
     const sessionUser = REGISTERED_USERS.find(
-      (u) => (u.user.email === identity || u.user.username === identity) && u.password === body.password,
+      (u) =>
+        (u.user.email === identity || u.user.username === identity) && u.password === body.password,
     );
 
     if (sessionUser) {
@@ -43,10 +51,13 @@ export const authHandlers = [
       });
     }
 
-    return HttpResponse.json({ message: 'Invalid credentials', code: 'INVALID_CREDENTIALS' }, { status: 401 });
+    return HttpResponse.json(
+      { message: 'Invalid credentials', code: 'INVALID_CREDENTIALS' },
+      { status: 401 },
+    );
   }),
 
-  http.post(`${BASE}/auth/register`, async ({ request }) => {
+  http.post(`${BASE}/users/auth/register`, async ({ request }) => {
     await delay(600);
     const body = (await request.json()) as { email: string; username: string; password: string };
 
@@ -69,23 +80,34 @@ export const authHandlers = [
 
     REGISTERED_USERS.push({ user: newUser, profile: newProfile, password: body.password });
 
-    return HttpResponse.json({ data: { user: newUser }, message: 'Account created' }, { status: 201 });
+    return HttpResponse.json(
+      { data: { user: newUser }, message: 'Account created' },
+      { status: 201 },
+    );
   }),
 
-  http.post(`${BASE}/auth/forgot-password`, async () => {
+  http.post(`${BASE}/users/auth/forgot-password`, async () => {
     await delay(800);
     return HttpResponse.json({ message: 'Reset email sent' });
   }),
 
-  http.post(`${BASE}/auth/reset-password`, async () => {
+  http.post(`${BASE}/users/auth/reset-password`, async () => {
     await delay(600);
     return HttpResponse.json({ message: 'Password reset successful' });
   }),
 
-  http.post(`${BASE}/auth/logout`, async () => {
+  http.post(`${BASE}/users/auth/logout`, async () => {
     await delay(200);
     CURRENT_USER_ID = null;
     return HttpResponse.json({ message: 'Logged out' });
+  }),
+
+  http.post(`${BASE}/users/auth/refresh`, async () => {
+    await delay(200);
+    if (!CURRENT_USER_ID) {
+      return HttpResponse.json({ message: 'No active session' }, { status: 401 });
+    }
+    return HttpResponse.json({ message: 'token refreshed successfully' });
   }),
 
   // also expose /me at service root to match backend
@@ -96,7 +118,9 @@ export const authHandlers = [
     }
 
     if (CURRENT_USER_ID === MOCK_CURRENT_USER.id) {
-      return HttpResponse.json({ data: { user: MOCK_CURRENT_USER, profile: MOCK_CURRENT_PROFILE } });
+      return HttpResponse.json({
+        data: { user: MOCK_CURRENT_USER, profile: MOCK_CURRENT_PROFILE },
+      });
     }
 
     const sessionUser = REGISTERED_USERS.find((u) => u.user.id === CURRENT_USER_ID);

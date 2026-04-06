@@ -19,12 +19,13 @@ apiClient.interceptors.response.use(
   async (axiosError: AxiosError<{ error?: string; message?: string }>) => {
     const config = (axiosError.config as RetryConfig) ?? {};
     const url = config.url ?? '';
-    const isRefreshCall = url.includes('/auth/refresh');
+    const isRefreshCall = url.includes('/users/auth/refresh');
+    const isLoginCall = url.includes('/users/auth/login');
 
-    if (axiosError.response?.status === 401 && !config._retry && !isRefreshCall) {
+    if (axiosError.response?.status === 401 && !config._retry && !isRefreshCall && !isLoginCall) {
       config._retry = true;
       try {
-        await apiClient.post('/auth/refresh', {}, { withCredentials: true });
+        await apiClient.post('/users/auth/refresh', {}, { withCredentials: true });
         return apiClient.request(config);
       } catch {
         throw new Error('Session expired');

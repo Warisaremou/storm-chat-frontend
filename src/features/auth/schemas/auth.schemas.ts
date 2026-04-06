@@ -26,7 +26,6 @@ export const registerStep2Schema = z.object({
     .string()
     .min(2, 'Display name must be at least 2 characters')
     .max(255, 'Display name is too long'),
-  avatar_url: z.string().url('Please enter a valid URL').optional().or(z.literal('')), // ← avatar_url string au lieu de File
 });
 
 export const forgotPasswordSchema = z.object({

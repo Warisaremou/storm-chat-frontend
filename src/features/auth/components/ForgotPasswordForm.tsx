@@ -1,3 +1,5 @@
+import type { FormEventHandler } from 'react';
+import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type z } from 'zod';
@@ -30,23 +32,25 @@ export function ForgotPasswordForm() {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof forgotPasswordSchema>) => {
-    try {
-      setIsLoading(true);
-      await authService.forgotPassword(values);
-      setIsSent(true);
-      toast.success('Reset link sent to your email');
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to send reset link';
-      toast.error(message);
-    } finally {
-      setIsLoading(false);
-    }
+  const onValidSubmit: SubmitHandler<z.infer<typeof forgotPasswordSchema>> = (values) => {
+    void (async () => {
+      try {
+        setIsLoading(true);
+        await authService.forgotPassword(values);
+        setIsSent(true);
+        toast.success('Reset link sent to your email');
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Failed to send reset link';
+        toast.error(message);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
   };
 
-  const handleSubmit = form.handleSubmit((values) => {
-    void onSubmit(values);
-  });
+  const onFormSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    void form.handleSubmit(onValidSubmit)(e);
+  };
 
   if (isSent) {
     return (
@@ -77,7 +81,7 @@ export function ForgotPasswordForm() {
       </div>
 
       <Form {...form}>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={onFormSubmit} className="space-y-4">
           <FormField
             control={form.control}
             name="email"

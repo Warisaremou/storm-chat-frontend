@@ -13,21 +13,21 @@ import type { UserProfile } from '@/types/user.types';
 
 export const authService = {
   login: async (payload: LoginPayload): Promise<LoginResponse> => {
-    const { data } = await apiClient.post<LoginResponse>('/auth/login', payload);
+    const { data } = await apiClient.post<LoginResponse>('/users/auth/login', payload);
     return data;
   },
 
   register: async (payload: RegisterStep1Payload): Promise<RegisterResponse> => {
-    const { data } = await apiClient.post<RegisterResponse>('/auth/register', payload);
+    const { data } = await apiClient.post<RegisterResponse>('/users/auth/register', payload);
     return data;
   },
 
   logout: async (): Promise<void> => {
-    await apiClient.post('/auth/logout');
+    await apiClient.post('/users/auth/logout');
   },
 
   refresh: async (): Promise<void> => {
-    await apiClient.post('/auth/refresh');
+    await apiClient.post('/users/auth/refresh');
   },
 
   getMe: async (): Promise<MeResponse> => {

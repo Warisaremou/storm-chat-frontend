@@ -1,25 +1,16 @@
-import type { MessageDeliveryStatus } from './enums';
+import type { UserPreview } from './user.types';
 
 export interface Message {
   id: string;
-  room_id: number;
-  sender_id: number;
+  room_id: string;
+  sender_id: string;
   content: string;
-  delivery_status: MessageDeliveryStatus;
-  is_read: boolean;
   created_at: string;
+  /** Populated by message-service list/create/WS when USER_SERVICE_URL is configured. */
+  sender?: UserPreview | null;
 }
 
-export interface MessageWithSender extends Message {
-  sender: {
-    id: number;
-    username: string;
-    display_name: string | null;
-    avatar_url: string | null;
-  };
-}
-
-export interface SendMessagePayload {
-  room_id: number;
-  content: string;
+export interface MessagesPage {
+  data: Message[];
+  next_cursor: string;
 }
