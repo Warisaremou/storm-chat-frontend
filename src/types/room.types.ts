@@ -1,34 +1,28 @@
-import type { RoomType, RoomMemberRole } from './enums';
 import type { UserPreview } from './user.types';
+import type { Message } from './message.types';
 
 export interface Room {
-  id: number;
+  id: string;
   name: string;
-  slug: string;
-  description: string | null;
-  type: RoomType;
-  avatar_url: string | null;
-  creator_id: number;
+  description: string;
+  owner_id: string;
   created_at: string;
   updated_at: string;
 }
 
 export interface RoomMember {
-  room_id: number;
-  user_id: number;
-  role: RoomMemberRole;
-  joined_at: string;
+  id: string;
+  room_id: string;
+  user_id: string;
+  role: 'owner' | 'member';
+  created_at: string;
 }
 
 export interface Conversation {
-  id: number;
+  id: string;
   room: Room;
-  otherParticipant: UserPreview;
+  otherParticipant: UserPreview | null;
   lastMessage: Message | null;
   unreadCount: number;
   updatedAt: string;
 }
-
-// Ensure Message is imported correctly later or declare a type here temporarily if needed.
-// However we will implement Message type in message.types.ts
-import type { Message } from './message.types';

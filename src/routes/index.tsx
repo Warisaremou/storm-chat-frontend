@@ -13,7 +13,6 @@ const RegisterStep2Page = lazy(() => import('@/pages/auth/RegisterStep2Page'));
 const ForgotPasswordPage = lazy(() => import('@/pages/auth/ForgotPasswordPage'));
 const ResetPasswordPage = lazy(() => import('@/pages/auth/ResetPasswordPage'));
 const ChatPage = lazy(() => import('@/pages/app/ChatPage'));
-const InvitationsPage = lazy(() => import('@/pages/app/InvitationsPage'));
 const ProfileSettingsPage = lazy(() => import('@/pages/app/ProfileSettingsPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
@@ -44,7 +43,6 @@ export const router = createBrowserRouter([
     children: [
       { path: PATHS.CHAT, element: wrap(<ChatPage />) },
       { path: PATHS.CHAT_CONVERSATION, element: wrap(<ChatPage />) },
-      { path: PATHS.INVITATIONS, element: wrap(<InvitationsPage />) },
       { path: PATHS.PROFILE_SETTINGS, element: wrap(<ProfileSettingsPage />) },
     ],
   },

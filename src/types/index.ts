@@ -1,25 +1,18 @@
-export type {
-  UserStatus,
-  RoomType,
-  RoomMemberRole,
-  MessageDeliveryStatus,
-  InvitationStatus,
-  Theme,
-} from './enums';
+export type { UserStatus, RoomType, RoomMemberRole, InvitationStatus, Theme } from './enums';
 export type { AuthUser, UserProfile, UserWithProfile, UserPreview } from './user.types';
 export type {
   RegisterStep1Payload,
   RegisterStep2Payload,
   LoginPayload,
   LoginResponse,
-  RegisterResponse, 
-  MeResponse, 
+  RegisterResponse,
+  MeResponse,
   ForgotPasswordPayload,
   ResetPasswordPayload,
   UpdateProfilePayload,
 } from './auth.types';
 export type { Room, RoomMember, Conversation } from './room.types';
-export type { Message, MessageWithSender, SendMessagePayload } from './message.types';
+export type { Message, MessagesPage } from './message.types';
 export type {
   Invitation,
   InvitationWithUsers,

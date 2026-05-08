@@ -1,3 +1,5 @@
+import type { FormEventHandler } from 'react';
+import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type z } from 'zod';
@@ -33,30 +35,32 @@ export function ResetPasswordForm() {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof resetPasswordSchema>) => {
-    if (!token) {
-      toast.error('Invalid or missing reset token');
-      return;
-    }
+  const onValidSubmit: SubmitHandler<z.infer<typeof resetPasswordSchema>> = (values) => {
+    void (async () => {
+      if (!token) {
+        toast.error('Invalid or missing reset token');
+        return;
+      }
 
-    try {
-      setIsLoading(true);
-      const { confirmPassword: _c, ...payload } = values;
-      void _c;
-      await authService.resetPassword({ ...payload, token });
-      toast.success('Password successfully reset');
-      void navigate(PATHS.LOGIN);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to reset password';
-      toast.error(message);
-    } finally {
-      setIsLoading(false);
-    }
+      try {
+        setIsLoading(true);
+        const { confirmPassword: _c, ...payload } = values;
+        void _c;
+        await authService.resetPassword({ ...payload, token });
+        toast.success('Password successfully reset');
+        void navigate(PATHS.LOGIN);
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Failed to reset password';
+        toast.error(message);
+      } finally {
+        setIsLoading(false);
+      }
+    })();
   };
 
-  const handleSubmit = form.handleSubmit((values) => {
-    void onSubmit(values);
-  });
+  const onFormSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    void form.handleSubmit(onValidSubmit)(e);
+  };
 
   return (
     <div className="w-full">
@@ -66,7 +70,7 @@ export function ResetPasswordForm() {
       </div>
 
       <Form {...form}>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={onFormSubmit} className="space-y-4">
           <FormField
             control={form.control}
             name="new_password"

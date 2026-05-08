@@ -1,6 +1,6 @@
 import { useAuthStore } from '@/stores/auth.store';
 import { ProfileForm } from '@/features/profile/components/ProfileForm';
-import { AvatarUpload } from '@/features/profile/components/AvatarUpload';
+import { UserAvatar } from '@/components/shared/UserAvatar';
 import { usersService } from '@/services/users.service';
 import { toast } from 'sonner';
 import { useState } from 'react';
@@ -16,32 +16,13 @@ export default function ProfileSettingsPage() {
   const handleProfileSubmit = async (data: UpdateProfileFormData) => {
     try {
       setIsLoading(true);
-      const response = await usersService.updateProfile(data);
-      if (user && response.data) {
-        // Update store with new profile data
-        const updatedProfile: UserProfile = {
-          ...(profile as UserProfile),
-          ...response.data,
-        };
-        setAuth(user, updatedProfile);
+      const updatedProfile = await usersService.updateProfile(data);
+      if (user) {
+        setAuth(user, { ...(profile as UserProfile), ...updatedProfile });
         toast.success('Profile updated successfully');
       }
     } catch {
       toast.error('Failed to update profile');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleAvatarUpload = async (_file: File) => {
-    try {
-      setIsLoading(true);
-      // In a real app, this would be a multipart/form-data request
-      // For mock, we just simulate success
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      toast.success('Avatar uploaded successfully');
-    } catch {
-      toast.error('Failed to upload avatar');
     } finally {
       setIsLoading(false);
     }
@@ -63,22 +44,15 @@ export default function ProfileSettingsPage() {
               <CardTitle className="text-xl">Your Identity</CardTitle>
               <CardDescription>This information will be visible to other users.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-8">
-              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8">
-                <AvatarUpload
-                  profile={profile}
-                  onUpload={(file) => void handleAvatarUpload(file)}
-                  isLoading={isLoading}
-                />
-
-                <div className="flex-1 w-full">
-                  <ProfileForm
-                    profile={profile}
-                    onSubmit={(data) => handleProfileSubmit(data)}
-                    isLoading={isLoading}
-                  />
-                </div>
+            <CardContent className="space-y-6">
+              <div className="flex justify-center">
+                <UserAvatar profile={profile} size="xl" />
               </div>
+              <ProfileForm
+                profile={profile}
+                onSubmit={(data) => handleProfileSubmit(data)}
+                isLoading={isLoading}
+              />
             </CardContent>
           </Card>
 

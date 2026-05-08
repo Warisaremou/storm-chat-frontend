@@ -1,6 +1,6 @@
 import { UserAvatar } from '@/components/shared/UserAvatar';
 import { Button } from '@/components/ui/button';
-import { Mail, MessageSquare, Phone, Video, Calendar, Shield } from 'lucide-react';
+import { MessageSquare, Calendar, Shield } from 'lucide-react';
 import type { UserPreview } from '@/types';
 
 interface UserProfileModalProps {
@@ -18,27 +18,6 @@ export function UserProfileModal({ user, onStartChat }: Readonly<UserProfileModa
           <h2 className="text-2xl font-bold tracking-tight">{user.display_name}</h2>
           <p className="text-sm text-muted-foreground font-medium">@{user.username}</p>
         </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="grid grid-cols-4 gap-3">
-        {[
-          { icon: MessageSquare, label: 'Chat' },
-          { icon: Phone, label: 'Audio' },
-          { icon: Video, label: 'Video' },
-          { icon: Mail, label: 'Email' },
-        ].map((action) => (
-          <Button
-            key={action.label}
-            variant="outline"
-            className="h-auto flex-col py-3 px-0 gap-1.5 border-border bg-background hover:bg-accent group/btn"
-          >
-            <action.icon className="h-4 w-4 text-primary group-hover/btn:scale-110 transition-transform" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground group-hover/btn:text-foreground">
-              {action.label}
-            </span>
-          </Button>
-        ))}
       </div>
 
       {/* Profile Info Card */}
@@ -71,10 +50,7 @@ export function UserProfileModal({ user, onStartChat }: Readonly<UserProfileModa
       </div>
 
       {/* Footer Action */}
-      <Button
-        onClick={onStartChat}
-        className="w-full h-12 text-sm font-bold gap-2.5 shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-[0.98] transition-all"
-      >
+      <Button onClick={onStartChat} className="w-full gap-2">
         <MessageSquare className="h-4 w-4" />
         Message {(user.display_name ?? 'User').split(' ')[0]}
       </Button>

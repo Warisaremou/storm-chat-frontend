@@ -7,6 +7,5 @@ export const PATHS = {
   RESET_PASSWORD: '/reset-password',
   CHAT: '/chat',
   CHAT_CONVERSATION: '/chat/:conversationId',
-  INVITATIONS: '/invitations',
   PROFILE_SETTINGS: '/settings/profile',
 } as const;

@@ -1,51 +1,69 @@
 import { format } from 'date-fns';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import type { Message } from '@/types';
-import { useAuthStore } from '@/stores/auth.store';
-import { Check, CheckCheck } from 'lucide-react';
+import type { Message, UserStatus } from '@/types';
+import { UserAvatar } from '@/components/shared/UserAvatar';
+
+const spring = { type: 'spring' as const, stiffness: 400, damping: 30 };
+
+export type MessageSenderAvatar = {
+  display_name: string | null;
+  username: string | null;
+  avatar_url: string | null;
+  status: UserStatus;
+};
 
 interface MessageBubbleProps {
   message: Message;
+  senderAvatar: MessageSenderAvatar;
+  /** First row in a run from the same sender — show avatar, name, and time (Discord-style). */
+  showAvatar: boolean;
 }
 
-export function MessageBubble({ message }: MessageBubbleProps) {
-  const { user } = useAuthStore();
-  const isOwn = message.sender_id === user?.id || message.sender_id === 1; // Assuming default mock user ID is 1
+function senderLabel(sender: MessageSenderAvatar): string {
+  const name = sender.display_name?.trim();
+  if (name) return name;
+  if (sender.username?.trim()) return sender.username.trim();
+  return 'Unknown';
+}
 
+/** Discord-style channel row: all messages left-aligned; avatar column; grouped lines share one header. */
+export function MessageBubble({ message, senderAvatar, showAvatar }: MessageBubbleProps) {
   const time = format(new Date(message.created_at), 'HH:mm');
+  const label = senderLabel(senderAvatar);
 
   return (
-    <div className={cn('flex w-full mb-4', isOwn ? 'justify-end' : 'justify-start')}>
-      <div
-        className={cn(
-          'max-w-[70%] px-4 py-2 rounded-2xl shadow-sm relative group',
-          isOwn
-            ? 'bg-primary text-primary-foreground rounded-tr-none'
-            : 'bg-muted text-foreground rounded-tl-none',
-        )}
-      >
-        <p className="text-sm leading-relaxed whitespace-pre-wrap wrap-break-word">
-          {message.content}
-        </p>
+    <motion.div
+      className={cn(
+        'group -mx-2 grid w-full max-w-full gap-x-3 rounded-lg px-2 py-0.5',
+        'hover:bg-muted/50',
+        showAvatar ? 'mt-3 first:mt-1' : 'mt-0.5',
+      )}
+      style={{ gridTemplateColumns: '40px minmax(0, 1fr)' }}
+      initial={{ opacity: 0, y: 4 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={spring}
+    >
+      <div className="flex w-10 shrink-0 justify-center pt-0.5">
+        {showAvatar ? <UserAvatar profile={senderAvatar} size="md" /> : null}
+      </div>
 
-        <div
-          className={cn(
-            'flex items-center gap-1 mt-1 justify-end',
-            isOwn ? 'text-primary-foreground/70' : 'text-muted-foreground',
-          )}
-        >
-          <span className="text-[10px]">{time}</span>
-          {isOwn && (
-            <span className="shrink-0">
-              {message.delivery_status === 'read' ? (
-                <CheckCheck className="h-3 w-3" />
-              ) : (
-                <Check className="h-3 w-3" />
-              )}
-            </span>
-          )}
+      <div className="min-w-0 pt-0.5">
+        {showAvatar ? (
+          <div className="mb-0.5 flex flex-wrap items-baseline gap-x-2 gap-y-0">
+            <span className="text-sm font-semibold leading-tight text-foreground">{label}</span>
+            <time
+              className="font-mono text-xs font-medium tabular-nums text-muted-foreground"
+              dateTime={message.created_at}
+            >
+              {time}
+            </time>
+          </div>
+        ) : null}
+        <div className="whitespace-pre-wrap break-words text-[15px] leading-[1.45] text-foreground">
+          {message.content}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
